@@ -5,6 +5,9 @@ import Drawer from '../component/drawer';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from '../screen/HomeScreen';
 import CustomDrawer from '../component/drawer';
+import WalletScreen from '../screen/WalletScreen';
+import HistoryScreen from '../screen/HistoryScreen';
+import ChangeScreen from '../screen/ChangeScreen';
 
 const DrawerNavigators = () => {
     const DrawerNavigation = createDrawerNavigator();
@@ -22,34 +25,9 @@ const DrawerNavigators = () => {
                 },
             }}>
             <DrawerNavigation.Screen name="HomeScreen" component={HomeScreen} />
-            {/* <DrawerNavigation.Screen name={'RateScreen'} component={RateScreen} />
-            <DrawerNavigation.Screen name="RideScreen" component={RideScreen} />
-            <DrawerNavigation.Screen name="PaymentScreen" component={PaymentScreen} />
-            <DrawerNavigation.Screen name="History" component={History} />
-            <DrawerNavigation.Screen
-                name="ReferFriendScreen"
-                component={ReferFriendScreen}
-            />
-            <DrawerNavigation.Screen
-                name="TermsAndConditions"
-                component={TermsAndConditions}
-            />
-            <DrawerNavigation.Screen
-                name="PrivacyPolicy"
-                component={PrivacyPolicy}
-            />
-
-            <DrawerNavigation.Screen name="MapScreen" component={MapScreen} />
-
-            <DrawerNavigation.Screen
-                name="RecieptScreen"
-                component={SendTripRecieptScreen}
-            />
-            <DrawerNavigation.Screen
-                name="PassengerDetails"
-                component={PassengerDetails}
-            /> */}
-
+            <DrawerNavigation.Screen name="WalletScreen" component={WalletScreen} />
+            <DrawerNavigation.Screen name="HistoryScreen" component={HistoryScreen} />
+            <DrawerNavigation.Screen name="ChangeScreen" component={ChangeScreen} />
         </DrawerNavigation.Navigator>
     );
 }

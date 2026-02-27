@@ -56,6 +56,121 @@ const Header = props => {
         { label: 'Logout', value: 'Logout' },
     ];
 
+    const renderLeftIcon = () => (
+        <View
+            style={{
+                height: SIZES.h26,
+                width: SIZES.h26,
+                borderRadius: SIZES.h10,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+            {showBack ? (
+                <Icon
+                    name={'arrow-back'}
+                    as={Ionicons}
+                    size={SIZES.h24 + 10}
+                    color={Colors.black}
+                    onPress={() => {
+                        navigationN.goBack();
+                    }}
+                />
+            ) : (
+                <Icon
+                    style={[styles.menu, styles.shadowporp]}
+                    name={'menu'}
+                    as={Feather}
+                    size={SIZES.h24}
+                    color={Colors.black}
+                    onPress={() => {
+                        navigationN.toggleDrawer();
+                    }}
+                />
+            )}
+        </View>
+    );
+
+    const renderCenter = () => (
+        title ? (
+            <CustomText style={[styles.text, textstyle]} isBold>
+                {title}
+            </CustomText>
+        ) : (
+            <CustomImage
+                resizeMode={'contain'}
+                style={{
+                    width: SIZES.windowWidth * 0.21,
+                    height: SIZES.windowHeight * 0.05,
+                }}
+            // source={require('../Assets/Images/customerservice.png')}
+            />
+        )
+    );
+
+    const renderRightIcon = () => (
+        !hideUser && cart ? (
+            <View
+                style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    paddingTop: SIZES.h10,
+                }}>
+                {cartData?.length > 0 && (
+                    <View
+                        style={{
+                            width: SIZES.h14,
+                            height: SIZES.h14,
+                            borderRadius: SIZES.font,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'red',
+                            position: 'absolute',
+                            right: -4,
+                            zIndex: 1,
+                            top: 0,
+                        }}>
+                        <CustomText
+                            style={{
+                                fontSize: 8,
+                            }}>
+                            {cartData?.length < 10 ? cartData?.length : '9+'}
+                        </CustomText>
+                    </View>
+                )}
+
+                <Icon
+                    name={'shopping-cart'}
+                    as={Feather}
+                    size={SIZES.h14}
+                    color={Colors.black}
+                    onPress={() => {
+                        if (token == null) {
+                            Confirm();
+                        } else if (cartData?.length > 0) {
+                            navigationServices.navigate('CartScreen');
+                        } else {
+                            return Platform.OS == 'android'
+                                ? ToastAndroid.show('No Item in cart', ToastAndroid.SHORT)
+                                : Alert('No Item in cart');
+                        }
+                    }}
+                />
+            </View>
+        ) : (
+            <View
+                style={{
+                    width: SIZES.windowHeight * 0.045,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: SIZES.windowHeight * 0.045,
+                    // backgroundColor: '#dedbdbc8',
+                    borderRadius: (SIZES.windowHeight * 0.045) / 2,
+                }}>
+                {/* Empty view or placeholder */}
+            </View>
+        )
+    );
+
     return (
         <>
             {isGredient ? (
@@ -64,228 +179,21 @@ const Header = props => {
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                     colors={headerColor ? headerColor : Colors.themegredient}>
-                    <View
-                        style={{
-                            height: SIZES.h26,
-                            width: SIZES.h26,
-                            borderRadius: SIZES.h10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}>
-                        {showBack ? (
-                            <Icon
-                                name={'arrow-back'}
-                                as={Ionicons}
-                                size={SIZES.h24}
-                                color={Colors.black}
-                                onPress={() => {
-                                    navigationN.goBack();
-                                }}
-                            />
-                        ) : (
-                            <Icon
-                                style={[styles.menu, styles.shadowporp]}
-                                name={'menu'}
-                                as={Feather}
-                                size={SIZES.h24}
-                                color={Colors.black}
-                                onPress={() => {
-                                    navigationN.toggleDrawer();
-                                }}
-                            />
-                        )}
-                    </View>
-                    {title ? (
-                        <>
-                            <CustomText style={[styles.text, textstyle]} isBold>
-                                {title}
-                            </CustomText>
-                        </>
-                    ) : (
-                        <CustomImage
-                            resizeMode={'contain'}
-                            style={{
-                                width: SIZES.windowWidth * 0.21,
-                                height: SIZES.windowHeight * 0.05,
-                            }}
-                        // source={require('../Assets/Images/customerservice.png')}
-                        />
-                    )}
-                    {!hideUser && cart ? (
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                paddingTop: SIZES.h10,
-                            }}>
-                            {cartData?.length > 0 && (
-                                <View
-                                    style={{
-                                        width: SIZES.h14,
-                                        height: SIZES.h14,
-                                        borderRadius: SIZES.font,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backgroundColor: 'red',
-                                        position: 'absolute',
-                                        right: -4,
-                                        zIndex: 1,
-                                        top: 0,
-                                    }}>
-                                    <CustomText
-                                        style={{
-                                            fontSize: 8,
-                                        }}>
-                                        {cartData?.length < 10 ? cartData?.length : '9+'}
-                                    </CustomText>
-                                </View>
-                            )}
-
-                            <Icon
-                                name={'shopping-cart'}
-                                as={Feather}
-                                size={SIZES.h14}
-                                color={Colors.black}
-                                onPress={() => {
-                                    if (token == null) {
-                                        Confirm();
-                                    } else if (cartData?.length > 0) {
-                                        navigationServices.navigate('CartScreen');
-                                    } else {
-                                        return Platform.OS == 'android'
-                                            ? ToastAndroid.show('No Item in cart', ToastAndroid.SHORT)
-                                            : Alert('No Item in cart');
-                                    }
-                                }}
-                            />
-                        </View>
-                    ) : (
-                        <View
-                            style={{
-                                width: SIZES.windowHeight * 0.045,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                elevation: 12,
-                                height: SIZES.windowHeight * 0.045,
-                                backgroundColor: '#dedbdbc8',
-                                borderRadius: (SIZES.windowHeight * 0.045) / 2,
-                            }}>
-                            {/* <CustomImage
-                        source={require('../Assets/Images/Group13.png')}
-                        style={{ width: SIZES.windowHeight * 0.04, height: SIZES.windowHeight * 0.04 }}
-                    /> */}
-                        </View>
-                    )}
+                    {renderLeftIcon()}
+                    {renderCenter()}
+                    {renderRightIcon()}
                 </LinearGradient>
-
             ) : (
                 <View style={[styles.header2, index && { zIndex: 1, backgroundColor: headerColor ? headerColor : Colors.themeColor }]}>
-                    <View
-                        style={{
-                            height: SIZES.h26,
-                            width: SIZES.h26,
-                            borderRadius: SIZES.h10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}>
-                        {showBack ? (
-                            <Icon
-                                name={'arrow-back'}
-                                as={Ionicons}
-                                size={SIZES.h24 + 10}
-                                color={Colors.black}
-                                onPress={() => {
-                                    navigationN.goBack();
-                                }}
-                            />
-                        ) : (
-                            <Icon
-                                style={[styles.menu, styles.shadowporp]}
-                                name={'menu'}
-                                as={Feather}
-                                size={SIZES.h24}
-                                color={Colors.black}
-                                onPress={() => {
-                                    navigationN.toggleDrawer();
-                                }}
-                            />
-                        )}
-                    </View>
-                    {title ? (
-                        <>
-                            <CustomText style={[styles.text, textstyle]} isBold>
-                                {title}
-                            </CustomText>
-                        </>
-                    ) : (
-                        <CustomImage
-                            resizeMode={'contain'}
-                            style={{
-                                width: SIZES.windowWidth * 0.21,
-                                height: SIZES.windowHeight * 0.05,
-                            }}
-                        // source={require('../Assets/Images/customerservice.png')}
-                        />
-                    )}
-                    {!hideUser && cart ? (
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                paddingTop: SIZES.h10,
-                            }}>
-                            {cartData?.length > 0 && (
-                                <View
-                                    style={{
-                                        width: SIZES.h14,
-                                        height: SIZES.h14,
-                                        borderRadius: SIZES.font,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backgroundColor: 'red',
-                                        position: 'absolute',
-                                        right: -4,
-                                        zIndex: 1,
-                                        top: 0,
-                                    }}>
-                                    <CustomText
-                                        style={{
-                                            fontSize: 8,
-                                        }}>
-                                        {cartData?.length < 10 ? cartData?.length : '9+'}
-                                    </CustomText>
-                                </View>
-                            )}
-
-                            <Icon
-                                name={'shopping-cart'}
-                                as={Feather}
-                                size={SIZES.h14}
-                                color={Colors.black}
-                                onPress={() => {
-                                    if (token == null) {
-                                        Confirm();
-                                    } else if (cartData?.length > 0) {
-                                        navigationServices.navigate('CartScreen');
-                                    } else {
-                                        return Platform.OS == 'android'
-                                            ? ToastAndroid.show('No Item in cart', ToastAndroid.SHORT)
-                                            : Alert('No Item in cart');
-                                    }
-                                }}
-                            />
-                        </View>
-                    ) : (
-                        <>
-                        </>
-                    )}
+                    {renderLeftIcon()}
+                    {renderCenter()}
+                    {renderRightIcon()}
                 </View>
-            )
-
-            }
+            )}
         </>
     );
 };
+
 const styles = StyleSheet.create({
     header1: {
         width: SIZES.windowWidth,
@@ -300,7 +208,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.36,
         shadowRadius: 6.68,
-
         elevation: 11,
     },
     user_name: {
@@ -343,7 +250,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.29,
         shadowRadius: 4.65,
-
         elevation: 3,
     },
     header2: {
@@ -364,4 +270,5 @@ const styles = StyleSheet.create({
         right: SIZES.font,
     },
 });
+
 export default Header;

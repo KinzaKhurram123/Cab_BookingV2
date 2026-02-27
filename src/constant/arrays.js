@@ -25,14 +25,39 @@ export const dummyUsers = [
 ];
 
 export const rideHistory = [
-  { id: 1, from: 'Home', to: 'Office', date: '2025-02-24', fare: 250 },
-  { id: 2, from: 'Office', to: 'Mall', date: '2025-02-23', fare: 180 },
+  { id: 1, from: 'Grand Canyon', to: 'Yellowstone National Park', date: '2025-02-24', fare: 250 },
+  { id: 2, from: 'Mesa Verde National Park', to: 'Yellowstone National Park', date: '2025-02-23', fare: 180 },
+  { id: 3, from: 'Mesa Verde National Park', to: 'Yellowstone National Park', date: '2025-02-23', fare: 180 },
 ];
 
 export const carsList = [
   { id: 1, model: 'Toyota Corolla', plate: 'ABC-123', type: 'Sedan' },
   { id: 2, model: 'Honda Civic', plate: 'XYZ-789', type: 'Sedan' },
 ];
+
+export const vehicle_list = [
+  {
+    id: 1,
+    image: Images.cab_card,
+    title: 'Cab \nBooking',
+  },
+  {
+    id: 2,
+    image: Images.cargo_card,
+    title: 'Parcel \nDelivery',
+  },
+  {
+    id: 3,
+    image: Images.pet_card,
+    title: 'Pet \nDelivery',
+  },
+];
+
+export const wallet_list = [
+  { id: 1, from: 'Today Earnings', fare: 250 },
+  { id: 1, from: 'Deposit', fare: 250 },
+];
+
 
 export const drawer_items = [
   {
@@ -46,28 +71,21 @@ export const drawer_items = [
     id: 2,
     name: 'Wallet',
     onPress: () => {
-      navigationServices.navigate('MyWallet');
+      navigationServices.navigate('WalletScreen');
     },
   },
   {
     id: 3,
     name: 'History',
     onPress: () => {
-      navigationServices.navigate('History');
-    },
-  },
-  {
-    id: 4,
-    name: 'Accounts',
-    onPress: () => {
-      navigationServices.navigate('Profile');
+      navigationServices.navigate('HistoryScreen');
     },
   },
   {
     id: 5,
     name: 'Change Password',
     onPress: () => {
-      navigationServices.navigate('ChangePassword');
+      navigationServices.navigate('ChangeScreen');
     },
   },
   {
@@ -91,5 +109,6 @@ export default {
   dummyUsers,
   rideHistory,
   carsList,
-  drawer_items
+  drawer_items,
+  vehicle_list
 };

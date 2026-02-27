@@ -9,7 +9,7 @@ const Colors = {
     lightGreen: '#11A44C',
     themeGreen: '#72A131',
     yellow: '#EBB645',
-    themeColor: '#339500',
+    themeColor: '#205205',
     themeColorLight: '#46cc00',
     red: '#DA3029',
     blue: '#00ADEF',
