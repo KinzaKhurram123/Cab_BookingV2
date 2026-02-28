@@ -1,4 +1,4 @@
-import { ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
+import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import Images from '../assests/Appimages';
 import CustomButton from '../component/customButton';
 import CustomImage from '../component/customImage';
@@ -6,25 +6,23 @@ import CustomText from '../component/customText';
 import TextInputWithTitle from '../component/textInputWithTitle';
 import Colors from '../config/appTheme';
 import arrays from '../constant/arrays';
-import { FONTS, SIZES } from '../constant/sizes';
+import {FONTS, SIZES} from '../constant/sizes';
 import navigationServices from '../navigator/navigationServices';
+import {windowWidth} from '../utility/utils';
 
 const LoginScreen = () => {
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
-      showsVerticalScrollIndicator={true}
-    >
+      showsVerticalScrollIndicator={true}>
       <ImageBackground
         source={Images.background_splash_screen}
-        style={styles.gradient}
-      >
+        style={styles.gradient}>
         <View
           style={{
             height: SIZES.windowHeight * 0.14,
             width: SIZES.windowHeight * 0.14,
-          }}
-        >
+          }}>
           <CustomImage
             resizeMode="contain"
             source={Images.car_image}
@@ -44,12 +42,11 @@ const LoginScreen = () => {
           <CustomText
             isBold
             style={{
-              ...FONTS.Bold20,
+              ...FONTS.Bold18,
               color: Colors.black,
               paddingVertical: SIZES.padding2,
               textAlign: 'center',
-            }}
-          >
+            }}>
             Sign In To Your Existing Account
           </CustomText>
           <TextInputWithTitle
@@ -87,7 +84,9 @@ const LoginScreen = () => {
               borderBottomColor: Colors.darkGray,
             }}
           />
-          <CustomText style={styles.forgotpassword} onPress={() => navigationServices.navigate('ForgetPassword')}>
+          <CustomText
+            style={styles.forgotpassword}
+            onPress={() => navigationServices.navigate('ForgetPassword')}>
             Forgot password ?
           </CustomText>
           <CustomButton
@@ -106,17 +105,15 @@ const LoginScreen = () => {
           <View
             style={[
               styles.row_view,
-              { width: SIZES.windowWidth * 0.9, justifyContent: 'center' },
-            ]}
-          >
+              {width: SIZES.windowWidth * 0.9, justifyContent: 'center'},
+            ]}>
             <View style={styles.lines} />
             <CustomText
               style={{
                 ...FONTS.Regular14,
                 color: Colors.darkGray,
                 paddingVertical: SIZES.padding,
-              }}
-            >
+              }}>
               Or Login With
             </CustomText>
             <View style={styles.lines} />
@@ -129,9 +126,16 @@ const LoginScreen = () => {
             ))}
           </View>
         </View>
-        <View style={[styles.row_view, { paddingVertical: SIZES.padding }]}>
+        <View
+          style={[
+            styles.row_view,
+            {paddingVertical: SIZES.padding, width: windowWidth * 0.6},
+          ]}>
           <CustomText style={styles.do_text}>Don’t have an account?</CustomText>
-          <CustomText isBold style={styles.Sign_text} onPress={() => navigationServices.navigate('SignupScreen')}>
+          <CustomText
+            isBold
+            style={styles.Sign_text}
+            onPress={() => navigationServices.navigate('SignupScreen')}>
             Sign Up
           </CustomText>
         </View>
@@ -183,7 +187,7 @@ const styles = StyleSheet.create({
     width: SIZES.windowWidth * 0.55,
   },
   forgotpassword: {
-    ...FONTS.Medium13,
+    ...FONTS.Medium12,
     color: Colors.themeColor,
     textAlign: 'right',
     width: '95%',

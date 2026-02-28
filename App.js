@@ -6,6 +6,7 @@ import { NativeBaseProvider } from 'native-base';
 import { Provider } from 'react-redux';
 import { persistor, store } from './src/store';
 import { PersistGate } from 'redux-persist/integration/react';
+import { requestCameraPermission, requestLocationPermission, requestWritePermission } from './src/utility/utils';
 
 const App = () => {
   return (
@@ -53,6 +54,16 @@ const useloader = (initialValue) => {
 
     return () => clearTimeout(timer);
   }, [loadingTime]);
+
+  useEffect(() => {
+    async function GetPermission() {
+      await requestCameraPermission();
+      await requestWritePermission();
+      await requestLocationPermission();
+      // await requestPostNotifications();
+    }
+    GetPermission();
+  }, []);
 
   return [isloading];
 };

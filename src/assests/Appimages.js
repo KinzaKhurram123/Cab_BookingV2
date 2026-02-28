@@ -10,6 +10,14 @@ const facebook_icon = require('../assests/images/facebook_icon.png');
 const splash_screen = require('../assests/images/splash_screen.png');
 const drawer_bg = require('../assests/images/drawer_bg.png');
 const user_image2 = require('../assests/images/user_image2.png');
+const location_pin = require('../assests/images/location-pin.png');
+const cab_card = require('../assests/images/cab_card.png');
+const cargo_card = require('../assests/images/cargo.png');
+const pet_card = require('../assests/images/bike.png');
+const card = require('../assests/images/card.jpeg');
+const card_1 = require('../assests/images/card_1.png');
+const atm_card = require('../assests/images/bank.png');
+const pet_delivery = require('../assests/images/pet_delivery.png');
 
 const Images = {
   background_image,
@@ -23,7 +31,15 @@ const Images = {
   apple_icon,
   splash_screen,
   drawer_bg,
-  user_image2
+  user_image2,
+  cab_card,
+  location_pin,
+  cargo_card,
+  pet_card,
+  card,
+  card_1,
+  atm_card,
+  pet_delivery,
 };
 
 export default Images;

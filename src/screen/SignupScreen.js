@@ -1,28 +1,26 @@
-import { ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
+import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
 import Images from '../assests/Appimages';
 import CustomButton from '../component/customButton';
 import CustomImage from '../component/customImage';
 import CustomText from '../component/customText';
 import TextInputWithTitle from '../component/textInputWithTitle';
 import Colors from '../config/appTheme';
-import { FONTS, SIZES } from '../constant/sizes';
+import {FONTS, SIZES} from '../constant/sizes';
+import {windowWidth} from '../utility/utils';
 
 const SignupScreen = () => {
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
-      showsVerticalScrollIndicator={true}
-    >
+      showsVerticalScrollIndicator={true}>
       <ImageBackground
         source={Images.background_splash_screen}
-        style={styles.gradient}
-      >
+        style={styles.gradient}>
         <View
           style={{
             height: SIZES.windowHeight * 0.14,
             width: SIZES.windowHeight * 0.14,
-          }}
-        >
+          }}>
           <CustomImage
             resizeMode="contain"
             source={Images.car_image}
@@ -39,12 +37,11 @@ const SignupScreen = () => {
           <CustomText
             isBold
             style={{
-              ...FONTS.Bold20,
+              ...FONTS.Bold18,
               color: Colors.black,
               paddingVertical: SIZES.padding2,
               textAlign: 'center',
-            }}
-          >
+            }}>
             Create Your Account
           </CustomText>
           <TextInputWithTitle
@@ -130,7 +127,11 @@ const SignupScreen = () => {
             elevation
           />
         </View>
-        <View style={[styles.row_view, { paddingVertical: SIZES.padding }]}>
+        <View
+          style={[
+            styles.row_view,
+            {paddingVertical: SIZES.padding, width: windowWidth * 0.6},
+          ]}>
           <CustomText style={styles.do_text}>Don’t have an account?</CustomText>
           <CustomText isBold style={styles.Sign_text}>
             Sign Up
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
     marginTop: SIZES.padding2,
     textAlign: 'left',
     width: SIZES.windowWidth * 0.7,
-    ...FONTS.Bold22,
+    ...FONTS.Bold20,
     textAlign: 'center',
   },
   input_container: {
