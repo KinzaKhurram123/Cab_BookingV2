@@ -25,7 +25,7 @@ const TextInputWithTitle = props => {
           style={[
             {
               color: Colors.mediumGray,
-              ...FONTS.Bold16,
+              ...FONTS.Bold14,
               width: SIZES.windowWidth * props.viewWidth,
               paddingHorizontal: SIZES.h15,
               marginTop: props.marginTop ? props.marginTop : SIZES.h10,

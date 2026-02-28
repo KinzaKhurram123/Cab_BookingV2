@@ -14,7 +14,10 @@ const location_pin = require('../assests/images/location-pin.png');
 const cab_card = require('../assests/images/cab_card.png');
 const cargo_card = require('../assests/images/cargo.png');
 const pet_card = require('../assests/images/bike.png');
-const card = require('../assests/images/card.png');
+const card = require('../assests/images/card.jpeg');
+const card_1 = require('../assests/images/card_1.png');
+const atm_card = require('../assests/images/bank.png');
+const pet_delivery = require('../assests/images/pet_delivery.png');
 
 const Images = {
   background_image,
@@ -33,7 +36,10 @@ const Images = {
   location_pin,
   cargo_card,
   pet_card,
-  card
+  card,
+  card_1,
+  atm_card,
+  pet_delivery,
 };
 
 export default Images;

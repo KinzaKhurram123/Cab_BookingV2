@@ -1,79 +1,80 @@
-import { FlatList, ImageBackground, ScrollView, StyleSheet } from 'react-native';
-import CustomButton from '../component/customButton';
+import {Icon, View} from 'native-base';
+import {FlatList, ScrollView, StyleSheet} from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Images from '../assests/Appimages';
+import CustomImage from '../component/customImage';
 import CustomText from '../component/customText';
 import Header from '../component/Header';
-import TextInputWithTitle from '../component/textInputWithTitle';
 import Colors from '../config/appTheme';
-import { FONTS, SIZES } from '../constant/sizes';
-import navigationServices from '../navigator/navigationServices';
-import { Icon, View } from 'native-base';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { windowWidth } from '../utility/utils';
-import { mode } from 'native-base/lib/typescript/theme/tools';
-import CustomImage from '../component/customImage';
-import Images from '../assests/Appimages';
-import { wallet_list } from '../constant/arrays';
+import {wallet_list} from '../constant/arrays';
+import {FONTS, SIZES} from '../constant/sizes';
+import {windowWidth} from '../utility/utils';
+import CustomButton from '../component/customButton';
 
 const WalletScreen = () => {
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
-      showsVerticalScrollIndicator={true}
-    >
-      <Header headerColor={Colors.white} hideUser={true} />
-      <View
-        style={styles.gradient}
-      >
-        <View style={styles.row_view}>
-          <CustomText
-            isBold
-            style={{
-              ...FONTS.Bold24,
-              color: Colors.black,
-              paddingVertical: SIZES.padding2,
-              textAlign: 'left',
-              width: '95%'
-            }}
-          >
-            My Wallet
-          </CustomText>
-          <View style={{ width: windowWidth * 0.08, height: windowWidth * 0.08, backgroundColor: Colors.lightGrey, borderRadius: windowWidth / 2, justifyContent: 'center', alignItems: 'center' }} >
-            <Icon name='check' as={FontAwesome} size={SIZES.padding} color={Colors.themeColor} />
-          </View>
-        </View>
+      showsVerticalScrollIndicator={true}>
+      <Header title={'My Wallet'} headerColor={Colors.white} hideUser={true} />
+      <View style={styles.gradient}>
         <View style={styles.header_view}>
-          <View style={{ width: "50%" }}>
-            <CustomText style={styles.heading}>
-              Your Balance
-            </CustomText>
-            <CustomText style={styles.price_heading} isBold>
-              $ 100.00
-            </CustomText>
-          </View>
-          <View style={styles.image_view}>
-            <CustomImage source={Images.card} style={styles.image} resizeMode={'contain'} />
-          </View>
+          <CustomImage
+            source={Images.atm_card}
+            style={styles.image}
+            resizeMode={'contain'}
+          />
         </View>
-        <FlatList
-          data={wallet_list}
+        <View
           style={{
-            marginTop: windowWidth * 0.2
-          }}
-          horizontal
-          renderItem={((item) => {
-            return (
-              <View style={{
-                width: windowWidth * 0.45,
-                height: windowWidth * 0.3,
-                backgroundColor: 'rgba(70, 204, 0,0.2)',
-                marginRight: SIZES.radius_sm,
-                borderRadius: SIZES.padding2
-              }}>
-
-              </View>
-            )
-          })}
-        />
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: SIZES.padding,
+            backgroundColor: Colors.white,
+            padding: SIZES.padding2,
+            borderRadius: SIZES.padding2,
+            width: windowWidth * 0.8,                           
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 6,
+            },
+            shadowOpacity: 0.39,
+            shadowRadius: 8.3,
+            elevation: 13,
+          }}>
+          <CustomText style={styles.heading} isBold>
+            Your Total Balance
+          </CustomText>
+          <CustomText style={styles.price_heading} isBold>
+            $ 100.00
+          </CustomText>
+          <CustomButton
+            text={'withdrawal'}
+            textColor={Colors.white}
+            width={SIZES.windowWidth * 0.6}
+            height={SIZES.windowHeight * 0.06}
+            marginTop={SIZES.padding}
+            bgColor={Colors.button_gredient}
+            borderRadius={SIZES.h16}
+            isBold
+            fontSize={SIZES.h16}
+            isGradient
+            elevation
+            onPress={() => navigationServices.navigate('DrawerNavigators')}
+          />
+        </View>
+        <CustomText
+          isBold
+          style={[
+            styles.heading,
+            {
+              textAlign: 'left',
+              marginTop: SIZES.padding,
+            },
+          ]}>
+          Cab Booking App :
+        </CustomText>
       </View>
     </ScrollView>
   );
@@ -93,15 +94,14 @@ const styles = StyleSheet.create({
     color: Colors.veryLightGray,
     width: '95%',
     ...FONTS.Regular14,
-    textAlign: 'left',
+    textAlign: 'center',
   },
   heading: {
-    color: Colors.darkGray,
+    color: Colors.black,
     marginTop: SIZES.base,
-    textAlign: 'left',
+    textAlign: 'center',
     width: SIZES.windowWidth * 0.9,
-    ...FONTS.Bold22,
-    marginLeft: SIZES.padding
+    ...FONTS.Bold20,
   },
   input_container: {
     borderTopWidth: 6,
@@ -116,13 +116,18 @@ const styles = StyleSheet.create({
     paddingVertical: SIZES.windowWidth * 0.05,
   },
   header_view: {
-    width: windowWidth * 0.9,
-    height: windowWidth * 0.35,
+    width: windowWidth * 0.85,
+    height: windowWidth * 0.6,
     borderRadius: SIZES.padding,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: SIZES.padding
+    marginTop: SIZES.padding,
+    shadowColor: '#46cc00',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.39,
+    shadowRadius: 8.3,
+    elevation: 13,
   },
   row_view: {
     flexDirection: 'row',
@@ -140,8 +145,8 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   image_view: {
-    width: SIZES.windowWidth * 0.5,
-    height: SIZES.windowWidth * 0.5,
+    width: SIZES.windowWidth * 0.4,
+    height: SIZES.windowWidth * 0.4,
     backgroundColor: Colors.white,
     shadowColor: '#000',
     shadowOffset: {
@@ -152,8 +157,8 @@ const styles = StyleSheet.create({
     shadowRadius: 5.46,
     elevation: 9,
     marginTop: SIZES.padding * 2,
-    borderTopLeftRadius: SIZES.padding + 10,
-    borderBottomLeftRadius: SIZES.padding + 10,
+    borderTopLeftRadius: SIZES.padding * 2,
+    borderBottomLeftRadius: SIZES.padding * 2,
   },
   image: {
     width: '100%',
@@ -181,11 +186,10 @@ const styles = StyleSheet.create({
   price_heading: {
     color: Colors.themeColor,
     marginTop: SIZES.base,
-    textAlign: 'left',
+    textAlign: 'center',
     width: SIZES.windowWidth * 0.9,
-    ...FONTS.Bold26,
-    marginLeft: SIZES.padding
-  }
+    ...FONTS.Bold24,
+  },
 });
 
 export default WalletScreen;
