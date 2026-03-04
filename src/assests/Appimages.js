@@ -18,6 +18,8 @@ const card = require('../assests/images/card.jpeg');
 const card_1 = require('../assests/images/card_1.png');
 const atm_card = require('../assests/images/bank.png');
 const pet_delivery = require('../assests/images/pet_delivery.png');
+const carimage = require('../assests/images/carimage.png');
+const confirm_ride = require('../assests/images/confirm_ride.png');
 
 const Images = {
   background_image,
@@ -40,6 +42,8 @@ const Images = {
   card_1,
   atm_card,
   pet_delivery,
+  carimage,
+  confirm_ride,
 };
 
 export default Images;

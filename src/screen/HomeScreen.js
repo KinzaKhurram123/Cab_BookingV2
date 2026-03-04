@@ -1,85 +1,24 @@
+import {Icon} from 'native-base';
+import React from 'react';
 import {
+  FlatList,
   ScrollView,
   StyleSheet,
-  FlatList,
+  TouchableOpacity,
   View,
-  ImageBackground,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {moderateScale} from 'react-native-size-matters';
-import Header from '../component/Header';
-import Colors from '../config/appTheme';
-import {Container, Icon} from 'native-base';
-import {FONTS, SIZES} from '../constant/sizes';
-import {useIsFocused} from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Images from '../assests/Appimages';
 import CustomImage from '../component/customImage';
 import CustomText from '../component/customText';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {rideHistory, vehicle_list} from '../constant/arrays';
+import VehicleCard from '../component/vehicleCard';
+import Colors from '../config/appTheme';
+import {rideHistory} from '../constant/arrays';
+import {FONTS, SIZES} from '../constant/sizes';
 import {windowWidth} from '../utility/utils';
-import LinearGradient from 'react-native-linear-gradient';
+import Header from '../component/Header';
 
 const HomeScreen = () => {
-  const VechicleCard = () => {
-    return (
-      <View>
-        <View style={styles.vehicleMainRow}>
-          <LinearGradient
-            style={styles.leftBigCard}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            colors={Colors.button_gredient}>
-            <View style={styles.bigCardImageBg}>
-              <CustomImage style={styles.image} source={Images.car_image} />
-            </View>
-          </LinearGradient>
-
-          <View style={styles.rightSmallCards}>
-            <LinearGradient
-              style={styles.smallCard}
-              start={{x: 0.5, y: 0}}
-              end={{x: 1, y: 1}}
-              colors={Colors.red_gredient}>
-              <View
-                style={{
-                  width: windowWidth * 0.2,
-                  height: windowWidth * 0.2,
-                  alignSelf: 'center',
-                  marginTop: SIZES.padding,
-                }}>
-                <CustomImage style={styles.image} source={Images.cargo_card} />
-              </View>
-            </LinearGradient>
-            <LinearGradient
-              style={[styles.smallCard, {marginTop: SIZES.base}]}
-              start={{x: 0.5, y: 0}}
-              end={{x: 1, y: 1}}
-              colors={Colors.red_gredient}>
-              <View
-                style={{
-                  width: windowWidth * 0.3,
-                  height: windowWidth * 0.28,
-                  alignSelf: 'center',
-                }}>
-                <CustomImage style={styles.image} source={Images.pet_card} />
-              </View>
-            </LinearGradient>
-          </View>
-        </View>
-        <LinearGradient
-          style={styles.lastCard}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          colors={Colors.button_gredient}>
-          <View style={styles.bigCardImageBg}>
-            <CustomImage style={styles.image} source={Images.pet_delivery} />
-          </View>
-        </LinearGradient>
-      </View>
-    );
-  };
-
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
@@ -141,7 +80,9 @@ const HomeScreen = () => {
         <CustomText style={styles.title} isBold>
           Let's Book Your Ride :
         </CustomText>
-        <VechicleCard />
+
+        <VehicleCard />
+
         <CustomText style={[styles.title, {marginTop: SIZES.padding}]} isBold>
           Past Rides :
         </CustomText>
@@ -149,7 +90,7 @@ const HomeScreen = () => {
           data={rideHistory}
           renderItem={({item}) => {
             return (
-              <View style={styles.past_ride_card}>
+              <TouchableOpacity style={styles.past_ride_card}>
                 <View style={styles.history_image}>
                   <Icon
                     name="location-outline"
@@ -170,7 +111,7 @@ const HomeScreen = () => {
                   </CustomText>
                 </View>
                 <CustomText style={styles.date}>{item?.date}</CustomText>
-              </View>
+              </TouchableOpacity>
             );
           }}
         />
@@ -272,114 +213,6 @@ const styles = StyleSheet.create({
     ...FONTS.Bold16,
     color: Colors.black,
     marginBottom: SIZES.h20,
-  },
-
-  vehicleMainRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: SIZES.windowWidth * 0.91,
-    height: SIZES.windowWidth * 0.52,
-  },
-  leftBigCard: {
-    width: SIZES.windowWidth * 0.55,
-    height: '100%',
-    borderRadius: SIZES.h12,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.44,
-    shadowRadius: 10.32,
-    elevation: 16,
-    backgroundColor: Colors.themeColorLight,
-  },
-  lastCard: {
-    width: SIZES.windowWidth * 0.9,
-    height: windowWidth * 0.4,
-    borderRadius: SIZES.h12,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.44,
-    shadowRadius: 10.32,
-    elevation: 16,
-    backgroundColor: Colors.themeColorLight,
-    marginTop: moderateScale(10, 0.6),
-  },
-  bigCardImageBg: {
-    width: '100%',
-    height: '100%',
-  },
-  bigCardText: {
-    ...FONTS.Bold16,
-    color: Colors.darkGray,
-    borderRadius: SIZES.h8,
-    margin: SIZES.base,
-    textAlign: 'left',
-    width: SIZES.windowWidth * 0.4,
-    padding: SIZES.radius_sm,
-  },
-  underlineText: {
-    textDecorationLine: 'underline',
-    textDecorationColor: Colors.themeColor,
-    textDecorationStyle: 'solid',
-  },
-  rightSmallCards: {
-    width: SIZES.windowWidth * 0.33,
-    height: SIZES.windowWidth * 0.25,
-    justifyContent: 'space-between',
-  },
-
-  smallCard: {
-    width: '100%',
-    height: SIZES.windowWidth * 0.25,
-    borderRadius: SIZES.h12,
-    // overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
-    backgroundColor: Colors.red,
-  },
-  smallCardMargin: {
-    marginTop: SIZES.h10,
-  },
-  smallCardImageBg: {
-    width: '100%',
-    height: '100%',
-  },
-  smallCardImageBg2: {
-    width: '80%',
-    height: '80%',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  },
-  smallCardText: {
-    ...FONTS.UrbanistLight10,
-    color: Colors.darkGray,
-    width: SIZES.windowWidth * 0.22,
-    borderRadius: SIZES.h8,
-    margin: SIZES.radius_sm,
-    padding: SIZES.radius_sm,
-  },
-  cardImageStyle: {
-    width: '100%',
-    height: '100%',
-    borderRadius: SIZES.h12,
-  },
-  cardImageStyle2: {
-    width: '100%',
-    height: '100%',
-    borderRadius: SIZES.h12,
   },
   flatListStyle: {
     width: SIZES.windowWidth,

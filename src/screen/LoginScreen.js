@@ -91,7 +91,7 @@ const LoginScreen = () => {
           </CustomText>
           <CustomButton
             text={'Sign In'}
-            textColor={Colors.white}
+            textColor={Colors.white}             
             width={SIZES.windowWidth * 0.8}
             height={SIZES.windowHeight * 0.07}
             marginTop={SIZES.padding}

@@ -9,6 +9,10 @@ import ForgetPassword from './screen/ForgetPassword';
 import OtpScreen from './screen/OtpScreen';
 import ResetPassword from './screen/ResetPassword';
 import DrawerNavigators from './navigator/DrawerNavigators';
+import RideBooking from './screen/RideBooking';
+import SetRoutes from './screen/SetRoute';
+import RideDetails from './screen/RideDetails';
+import ConfirmBooking from './screen/confirmBooking';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +28,10 @@ const MainNavigator = () => {
         <Stack.Screen name="OtpScreen" component={OtpScreen} />
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
         <Stack.Screen name="DrawerNavigators" component={DrawerNavigators} />
+        <Stack.Screen name="RideBooking" component={RideBooking} />
+        <Stack.Screen name="SetRoutes" component={SetRoutes} />
+        <Stack.Screen name="RideDetails" component={RideDetails} />
+        <Stack.Screen name="ConfirmBooking" component={ConfirmBooking} />
       </Stack.Navigator>
     </NavigationContainer>
   );

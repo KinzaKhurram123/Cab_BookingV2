@@ -8,8 +8,10 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Colors from '../config/appTheme';
-import { FONTS, SIZES } from '../constant/sizes';
+import {FONTS, SIZES} from '../constant/sizes';
 import CustomText from './customText';
+import {Icon} from 'native-base';
+import {moderateScale} from 'react-native-size-matters';
 
 const CustomButton = props => {
   const {
@@ -44,7 +46,7 @@ const CustomButton = props => {
     image,
     fontcase,
     style,
-    btn_style
+    btn_style,
   } = props;
   return (
     <TouchableOpacity
@@ -94,8 +96,7 @@ const CustomButton = props => {
         },
         style,
       ]}
-      disabled={disabled}
-    >
+      disabled={disabled}>
       {disabled == false && isGradient ? (
         <LinearGradient
           style={{
@@ -106,10 +107,9 @@ const CustomButton = props => {
             justifyContent: 'center',
             borderRadius: borderRadius,
           }}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          colors={bgColor}
-        >
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          colors={bgColor}>
           {loader && (
             <ActivityIndicator
               style={styles.indicatorStyle}
@@ -123,21 +123,24 @@ const CustomButton = props => {
                 width: SIZES.windowWidth * 0.1,
                 height: SIZES.windowWidth * 0.1,
                 overflow: 'hidden',
-              }}
-            >
+              }}>
               {/* <CustomImage
                 source={require('../Assets/Images/goal.png')}
                 style={{ width: '100%', height: '100%' }}
               /> */}
             </View>
           )}
-          {/* {iconName && (
+          {iconName && (
             <Icon
               name={iconName}
               as={iconType}
-              style={[styles.iconCustom, iconStyle && iconStyle]}
+              size={moderateScale(26, 0.6)}
+              color={Colors.white}
+              style={{
+                marginRight: moderateScale(6, 0.5),
+              }}
             />
-          )} */}
+          )}
           <CustomText
             style={[
               styles.text,
@@ -149,11 +152,10 @@ const CustomButton = props => {
               textTransform && {
                 textTransform: textTransform,
               },
-              btn_style
+              btn_style,
             ]}
             isRegular={isBold ? false : true}
-            isBold={isBold ? true : false}
-          >
+            isBold={isBold ? true : false}>
             {text}
           </CustomText>
         </LinearGradient>
@@ -173,21 +175,24 @@ const CustomButton = props => {
                 marginRight: SIZES.h10,
                 height: SIZES.windowWidth * 0.07,
                 overflow: 'hidden',
-              }}
-            >
+              }}>
               {/* <CustomImage
                 source={require('../Assets/Images/goal.png')}
                 style={{ width: '100%', height: '100%', tintColor: 'black' }}
               /> */}
             </View>
           )}
-          {/* {iconName && (
+          {iconName && (
             <Icon
               name={iconName}
               as={iconType}
-              style={[styles.iconCustom, iconStyle && iconStyle]}
+              size={moderateScale(26, 0.6)}
+              color={Colors.white}
+              style={{
+                marginRight: moderateScale(6, 0.5),
+              }}
             />
-          )} */}
+          )}
           <CustomText
             style={[
               styles.text,
@@ -204,8 +209,7 @@ const CustomButton = props => {
               },
             ]}
             isRegular={isBold ? false : true}
-            isBold={isBold ? true : false}
-          >
+            isBold={isBold ? true : false}>
             {text}
           </CustomText>
         </>
@@ -234,11 +238,6 @@ const styles = StyleSheet.create({
   indicatorStyle: {
     paddingRight: 5,
     paddingLeft: I18nManager.isRTL ? 5 : 0,
-  },
-  iconCustom: {
-    color: 'white',
-    fontSize: SIZES.h16,
-    marginRight: SIZES.h10,
   },
 });
 

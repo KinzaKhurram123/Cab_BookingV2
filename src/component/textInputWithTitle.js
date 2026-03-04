@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -8,12 +8,15 @@ import {
   I18nManager,
   Platform,
 } from 'react-native';
-import { FONTS, SIZES } from '../constant/sizes';
-import { useState } from 'react';
-import { FontAwesome } from '@react-native-vector-icons/fontisto';
-import { Foundation } from '@react-native-vector-icons/fontisto';
+import {FONTS, SIZES} from '../constant/sizes';
+import {useState} from 'react';
+import {FontAwesome} from '@react-native-vector-icons/fontisto';
+import {Foundation} from '@react-native-vector-icons/fontisto';
 import CustomText from './customText';
 import Colors from '../config/appTheme';
+import {Icon} from 'native-base';
+import {windowHeight, windowWidth} from '../utility/utils';
+import {moderateScale} from 'react-native-size-matters';
 
 const TextInputWithTitle = props => {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,8 +34,7 @@ const TextInputWithTitle = props => {
               marginTop: props.marginTop ? props.marginTop : SIZES.h10,
             },
             props?.titleStlye,
-          ]}
-        >
+          ]}>
           {props?.title}
         </CustomText>
       )}
@@ -85,16 +87,16 @@ const TextInputWithTitle = props => {
               paddingLeft: SIZES.h15,
             },
           props.inputStyle,
-        ]}
-      >
-        {/* {props.foundation && (
-          <Foundation
+        ]}>
+        {props.foundation && (
+          <Icon
             color={props.iconColor}
             name={props.iconName}
-            size={moderateScale(20, 0.2)}
+            as={props.iconType}
+            size={moderateScale(30, 0.2)}
           />
-        )} */}
-        {/* {props.iconName && !props.foundation && (
+        )}
+        {props.iconName && !props.foundation && (
           <Icon
             name={props.iconName}
             as={props.iconType}
@@ -124,11 +126,10 @@ const TextInputWithTitle = props => {
                 left: moderateScale(10, 0.3),
               },
             ]}
-            size={moderateScale(17, 0.3)}
+            size={props.iconHeight ? props.iconHeight : moderateScale(20, 0.6)}
             onPress={props.onPressLeft}
           />
-        )} */}
-
+        )}
         {props.secureText ? (
           <>
             <TextInput
@@ -176,8 +177,7 @@ const TextInputWithTitle = props => {
                     : Dimensions.get('window').height * 0.0525,
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}
-            >
+              }}>
               {/* <Icon
                 name={showPassword ? 'eye' : 'eye-slash'}
                 as={FontAwesome}
@@ -196,7 +196,7 @@ const TextInputWithTitle = props => {
                 },
                 Platform.OS === 'android'
                   ? styles.inputBox
-                  : [styles.inputBox, { paddingBottom: 0 }],
+                  : [styles.inputBox, {paddingBottom: 0}],
                 props.numberOfLines > 1 && {
                   textAlignVertical: 'top',
                 },
