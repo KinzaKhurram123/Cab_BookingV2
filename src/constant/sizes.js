@@ -27,6 +27,8 @@ export const SIZES = {
   h23: moderateScale(23),
   h24: moderateScale(24),
   h26: moderateScale(26),
+  h30: moderateScale(30),
+  h34: moderateScale(34),
 
   windowWidth: width,
   windowHeight: height,
@@ -234,7 +236,14 @@ export const FONTS = {
     fontFamily: 'Bungee-Regular',
     fontSize: RFValue(SIZES.h26),
   },
-
+  Bold30: {
+    fontFamily: 'Bungee-Regular',
+    fontSize: RFValue(SIZES.h30),
+  },
+  Bold34: {
+    fontFamily: 'Bungee-Regular',
+    fontSize: RFValue(SIZES.h34),
+  },
   // Medium Fonts
   Medium11: {
     fontFamily: 'Urbanist-Medium',

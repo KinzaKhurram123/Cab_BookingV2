@@ -22,8 +22,10 @@ import {useIsFocused} from '@react-navigation/native';
 import {getDistance, isValidCoordinate} from 'geolib';
 import PulsingMarker from '../component/pulsingMarker';
 import {mapstyle} from '../constant/mapStyle';
+import {useTheme} from '../context/ThemeContext';
 
 const RideBooking = () => {
+  const {theme} = useTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [pickupLocation, setPickUpLocation] = useState({});
   const [dropOffLocation, setDropOffLocation] = useState({});
@@ -32,19 +34,23 @@ const RideBooking = () => {
   const isFocused = useIsFocused();
   const mapRef = useRef(null);
   const [isNearDestination, setIsNearDestination] = useState(false);
+  const [address, setAddress] = useState('');
   const data = {};
   const [currentPosition, setCurrentPosition] = useState({
     latitude: 0,
     longitude: 0,
   });
+
   const origin = {
     lat: currentPosition?.latitude,
     lng: currentPosition?.longitude,
   };
+
   const destination = {
     lat: parseFloat(data?.dropoff_location_lat),
     lng: parseFloat(data?.dropoff_location_lng),
   };
+
   useEffect(() => {
     getCurrentLocation();
   }, [isFocused]);
@@ -130,7 +136,6 @@ const RideBooking = () => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data, 'daaaaaaaaaaaaaaaatttttttttttttttttaaaaaaaa');
       if (data.status === 'OK') {
         const givenaddress = data.results[0].formatted_address;
         setAddress(givenaddress);
@@ -143,18 +148,19 @@ const RideBooking = () => {
   };
 
   const pramsData = {
-    pickupLocation: currentPosition,
-    dropOffLocation: {
-      latitude: '24.8016',
-      longitude: '67.0295',
-    },
+    pickupLocation: isYourLocation ? currentPosition : pickupLocation,
+    dropOffLocation: dropOffLocation,
   };
 
   return (
     <ScrollView
-      contentContainerStyle={styles.scrollContainer}
+      contentContainerStyle={[
+        styles.scrollContainer,
+        {backgroundColor: theme.background},
+      ]}
       showsVerticalScrollIndicator={true}>
       <MapView
+        pointerEvents={isModalVisible ? 'none' : 'auto'}
         ref={mapRef}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
@@ -172,35 +178,26 @@ const RideBooking = () => {
             latitude: currentPosition?.latitude,
             longitude: currentPosition?.longitude,
           }}
-          color={Colors.themeColorLight}
+          color={theme.primary}
           text="📍"
         />
       </MapView>
+
       <View style={styles.overlay}>
         <View
-          style={{
-            width: windowWidth * 0.9,
-            gap: moderateScale(-7, 0.1),
-            backgroundColor: '#f3f3f3f8',
-            borderRadius: moderateScale(10, 0.2),
-            padding: moderateScale(12, 0.2),
-            position: 'absolute',
-            top: 20,
-            shadowColor: '#46cc00',
-            shadowOffset: {
-              width: 0,
-              height: 8,
+          style={[
+            styles.locationCard,
+            {
+              backgroundColor: theme.card,
+              shadowColor: theme.primary,
             },
-            shadowOpacity: 0.46,
-            shadowRadius: 11.14,
-            elevation: 17,
-          }}>
+          ]}>
           <View style={{flexDirection: 'row'}}>
             <Icon
               as={FontAwesome}
               name="location-arrow"
               size={moderateScale(24, 0.2)}
-              color={Colors.themeColorLight}
+              color={theme.primary}
             />
             <TouchableOpacity
               onPress={() => {
@@ -210,14 +207,11 @@ const RideBooking = () => {
               style={styles.locationPickerBtn}>
               <CustomText
                 numberOfLines={3}
-                style={{
-                  width: windowWidth * 0.7,
-                  ...FONTS.Regular12,
-                }}>
+                style={[styles.locationText, {color: theme.text}]}>
                 {Object.keys(pickupLocation).length > 0
-                  ? pickupLocation?.name || isYourLocation
+                  ? isYourLocation
                     ? 'Your Live Location'
-                    : 'Choose Your Pickup Location'
+                    : pickupLocation?.name
                   : 'Choose Your Pickup Location'}
               </CustomText>
               <Icon
@@ -225,38 +219,41 @@ const RideBooking = () => {
                 name={
                   Object.keys(pickupLocation).length == 0 ? 'plus' : 'close'
                 }
+                color={theme.primary}
               />
             </TouchableOpacity>
           </View>
+
           <View style={styles.dotView}>
             <View style={{gap: -5}}>
               <Icon
                 as={Entypo}
                 name="dots-two-vertical"
                 size={moderateScale(24, 0.2)}
-                color={Colors.themeColor}
+                color={theme.primary}
               />
               <Icon
                 as={Entypo}
                 name="dots-two-vertical"
                 size={moderateScale(24, 0.2)}
-                color={Colors.themeColor}
+                color={theme.primary}
               />
             </View>
             <Divider
-              color={Colors.lightGrey}
+              bg={theme.border}
               width={'2xs'}
               borderWidth={0.2}
               marginLeft={2}
-              borderColor={Colors.lightGrey}
+              borderColor={theme.border}
             />
           </View>
+
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Icon
               as={Entypo}
               name="location-pin"
               size={moderateScale(24, 0.2)}
-              color={Colors.themeColorLight}
+              color={theme.primary}
             />
             <TouchableOpacity
               onPress={() => {
@@ -265,11 +262,8 @@ const RideBooking = () => {
               }}
               style={styles.locationPickerBtn}>
               <CustomText
-                numberOfLines={3}
-                style={{
-                  width: windowWidth * 0.7,
-                  ...FONTS.Regular12,
-                }}>
+                numberOfLines={2}
+                style={[styles.locationText, {color: theme.text}]}>
                 {Object.keys(dropOffLocation).length > 0
                   ? dropOffLocation?.name
                   : 'Choose Your Drop Location'}
@@ -279,154 +273,150 @@ const RideBooking = () => {
                 name={
                   Object.keys(dropOffLocation).length == 0 ? 'plus' : 'close'
                 }
+                color={theme.primary}
               />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View
-          style={{
-            width: windowWidth,
-            height: windowHeight * 0.4,
-            backgroundColor: 'transparent',
-            position: 'absolute',
-            bottom: 0,
-          }}>
-          <View style={styles.bottom_main_view}>
+        <View style={styles.bottomSheet}>
+          <View
+            style={[
+              styles.bottom_main_view,
+              {backgroundColor: 'rgba(255,255,255,0.9)'},
+            ]}>
             <View style={styles.bottom_view}>
-              <View style={styles.small_card}>
-                <View
-                  style={{
-                    width: windowWidth * 0.2,
-                    height: windowWidth * 0.2,
-                    alignItems: 'center',
-                  }}>
-                  <CustomImage source={Images.carimage} />
+              <View
+                style={[
+                  styles.small_card,
+                  {backgroundColor: theme.card, shadowColor: theme.primary},
+                ]}>
+                <View style={styles.vehicleImageContainer}>
+                  <CustomImage
+                    source={Images.carimage}
+                    style={styles.vehicleImage}
+                  />
                 </View>
-                <View
-                  style={{
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    top: -10,
-                  }}>
-                  <CustomText style={styles.heading} isBold>
+                <View style={styles.vehicleInfo}>
+                  <CustomText
+                    style={[styles.heading, {color: theme.text}]}
+                    isBold>
                     Basic
                   </CustomText>
                   <CustomText
-                    style={[styles.text, {color: Colors.veryLightGray}]}>
+                    style={[styles.text, {color: theme.veryLightGray}]}>
                     4 Seater
                   </CustomText>
-                  <CustomText isBold style={styles.price}>
+                  <CustomText
+                    isBold
+                    style={[styles.price, {color: theme.primary}]}>
                     6 $
                   </CustomText>
                 </View>
               </View>
-              <View style={styles.image_card_view}>
-                <View
-                  style={{
-                    width: windowWidth * 0.2,
-                    height: windowWidth * 0.2,
-                    alignItems: 'center',
-                  }}>
-                  <CustomImage source={Images.carimage} />
+
+              {/* Premium Card */}
+              <View
+                style={[
+                  styles.image_card_view,
+                  {
+                    backgroundColor: theme.card,
+                    shadowColor: theme.primary,
+                    borderBottomColor: theme.primary,
+                  },
+                ]}>
+                <View style={styles.vehicleImageContainer}>
+                  <CustomImage
+                    source={Images.carimage}
+                    style={styles.vehicleImage}
+                  />
                 </View>
-                <CustomText style={styles.heading} isBold>
+                <CustomText
+                  style={[styles.heading, {color: theme.text}]}
+                  isBold>
                   Premium
                 </CustomText>
-                <CustomText
-                  style={[styles.text, {color: Colors.veryLightGray}]}>
+                <CustomText style={[styles.text, {color: theme.veryLightGray}]}>
                   4 Seater
                 </CustomText>
-                <CustomText isBold style={styles.price}>
+                <CustomText
+                  isBold
+                  style={[styles.price, {color: theme.primary}]}>
                   6 $
                 </CustomText>
               </View>
-              <View style={styles.small_card}>
-                <View
-                  style={{
-                    width: windowWidth * 0.2,
-                    height: windowWidth * 0.2,
-                    alignItems: 'center',
-                  }}>
-                  <CustomImage source={Images.carimage} />
+
+              {/* Standard Card */}
+              <View
+                style={[
+                  styles.small_card,
+                  {backgroundColor: theme.card, shadowColor: theme.primary},
+                ]}>
+                <View style={styles.vehicleImageContainer}>
+                  <CustomImage
+                    source={Images.carimage}
+                    style={styles.vehicleImage}
+                  />
                 </View>
-                <View
-                  style={{
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    top: -10,
-                  }}>
-                  <CustomText style={styles.heading} isBold>
-                    Standerd
+                <View style={styles.vehicleInfo}>
+                  <CustomText
+                    style={[styles.heading, {color: theme.text}]}
+                    isBold>
+                    Standard
                   </CustomText>
                   <CustomText
-                    style={[styles.text, {color: Colors.veryLightGray}]}>
+                    style={[styles.text, {color: theme.veryLightGray}]}>
                     4 Seater
                   </CustomText>
-                  <CustomText isBold style={styles.price}>
+                  <CustomText
+                    isBold
+                    style={[styles.price, {color: theme.primary}]}>
                     6 $
                   </CustomText>
                 </View>
               </View>
             </View>
-            <View
-              style={{
-                top: -30,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+
+            {/* Divider */}
+            <View style={styles.dividerContainer}>
+              <View style={[styles.divider, {backgroundColor: theme.border}]} />
+
+              {/* Payment Method */}
               <View
-                style={{
-                  width: '95%',
-                  height: 0.5,
-                  backgroundColor: Colors.veryLightGray,
-                }}
-              />
-              <View
-                style={{
-                  width: '95%',
-                  height: windowWidth * 0.15,
-                  backgroundColor: 'rgba(70, 204, 0,0.1)',
-                  marginTop: moderateScale(10, 0.6),
-                  borderRadius: moderateScale(10, 0.6),
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingHorizontal: moderateScale(10, 0.6),
-                }}>
-                <CustomText isBold style={styles.pm_text}>
+                style={[
+                  styles.paymentCard,
+                  {backgroundColor: `${theme.primary}10`},
+                ]}>
+                <CustomText
+                  isBold
+                  style={[styles.pm_text, {color: theme.text}]}>
                   Payment Method
                 </CustomText>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
+                <View style={styles.paymentMethod}>
                   <CustomText
                     isBold
-                    style={[styles.pm_text, {color: Colors.mediumGray}]}>
+                    style={[styles.pm_text, {color: theme.mediumGray}]}>
                     Credit Card
                   </CustomText>
                   <Icon
                     name="triangle-right"
                     as={Entypo}
                     size={moderateScale(25, 0.6)}
-                    color={Colors.mediumGray}
+                    color={theme.mediumGray}
                   />
                 </View>
               </View>
             </View>
           </View>
+
+          {/* Book Now Button */}
           <CustomButton
             text={'Book Now'}
-            textColor={Colors.white}
+            textColor={theme.white}
             width={SIZES.windowWidth * 0.85}
             height={SIZES.windowHeight * 0.08}
             marginTop={SIZES.padding}
-            bgColor={Colors.button_gredient}
+            bgColor={theme.button_gredient || ['#46cc00', '#339500']}
             borderRadius={SIZES.padding}
             isBold
             isGradient
@@ -437,6 +427,8 @@ const RideBooking = () => {
           />
         </View>
       </View>
+
+      {/* Search Location Modal */}
       <SearchLocationModal
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
@@ -458,14 +450,9 @@ export default RideBooking;
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    backgroundColor: Colors.white,
   },
-  main_view: {
-    flex: 1,
-    backgroundColor: Colors.white,
-    alignItems: 'center',
-    paddingHorizontal: SIZES.padding2,
-    paddingVertical: SIZES.padding2,
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -473,46 +460,81 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  locationCard: {
+    width: windowWidth * 0.9,
+    gap: moderateScale(-7, 0.1),
+    borderRadius: moderateScale(10, 0.2),
+    padding: moderateScale(12, 0.2),
+    position: 'absolute',
+    top: 20,
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.46,
+    shadowRadius: 11.14,
+    elevation: 17,
+  },
   locationPickerBtn: {
-    // marginTop: moderateScale(6, 0.2),
-    // width: windowWidth * 0.8,
     padding: moderateScale(7, 0.2),
-
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flex: 1,
+  },
+  locationText: {
+    width: windowWidth * 0.6,
+    ...FONTS.Regular12,
   },
   dotView: {
     flexDirection: 'row',
     gap: moderateScale(2, 0.2),
     alignItems: 'center',
+    marginLeft: moderateScale(30, 0.2),
   },
-  locationPickerBtn: {
-    // marginTop: moderateScale(6, 0.2),
-    // width: windowWidth * 0.8,
-    padding: moderateScale(7, 0.2),
-
+  bottomSheet: {
+    width: windowWidth,
+    height: windowHeight * 0.4,
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    bottom: 0,
+  },
+  bottom_main_view: {
+    width: windowWidth * 0.95,
+    height: windowWidth * 0.55,
+    alignSelf: 'center',
+    borderRadius: moderateScale(10, 0.6),
+    paddingHorizontal: moderateScale(6, 0.5),
+  },
+  bottom_view: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  heading: {
-    ...FONTS.Bold13,
-    color: Colors.black,
-  },
-  image_card_view: {
-    width: windowWidth * 0.33,
-    height: windowWidth * 0.4,
-    backgroundColor: Colors.white,
+  small_card: {
+    width: windowWidth * 0.28,
+    height: windowWidth * 0.34,
     borderRadius: moderateScale(10, 0.6),
     alignSelf: 'center',
     top: -50,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#46cc00',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.44,
+    shadowRadius: 10.32,
+    elevation: 16,
+  },
+  image_card_view: {
+    width: windowWidth * 0.33,
+    height: windowWidth * 0.4,
+    borderRadius: moderateScale(10, 0.6),
+    alignSelf: 'center',
+    top: -50,
+    justifyContent: 'center',
+    alignItems: 'center',
     shadowOffset: {
       width: 0,
       height: 8,
@@ -521,48 +543,57 @@ const styles = StyleSheet.create({
     shadowRadius: 10.32,
     elevation: 16,
     borderBottomWidth: 5,
-    borderBottomColor: Colors.themeColorLight,
   },
-  small_card: {
-    width: windowWidth * 0.28,
-    height: windowWidth * 0.34,
-    backgroundColor: Colors.white,
-    borderRadius: moderateScale(10, 0.6),
-    alignSelf: 'center',
-    top: -50,
+  vehicleImageContainer: {
+    width: windowWidth * 0.2,
+    height: windowWidth * 0.2,
+    alignItems: 'center',
+  },
+  vehicleImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
+  vehicleInfo: {
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.44,
-    shadowRadius: 10.32,
-    elevation: 16,
+    top: -10,
   },
-  bottom_view: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  bottom_main_view: {
-    width: windowWidth * 0.95,
-    height: windowWidth * 0.55,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    alignSelf: 'center',
-    borderRadius: moderateScale(10, 0.6),
-    paddingHorizontal: moderateScale(6, 0.5),
+  heading: {
+    ...FONTS.Bold13,
   },
   text: {
     ...FONTS.Regular13,
   },
   price: {
     ...FONTS.Bold16,
-    color: Colors.themeColor,
+  },
+  dividerContainer: {
+    top: -30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  divider: {
+    width: '95%',
+    height: 0.5,
+  },
+  paymentCard: {
+    width: '95%',
+    height: windowWidth * 0.15,
+    marginTop: moderateScale(10, 0.6),
+    borderRadius: moderateScale(10, 0.6),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: moderateScale(10, 0.6),
   },
   pm_text: {
     ...FONTS.Bold14,
-    color: Colors.black,
+  },
+  paymentMethod: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

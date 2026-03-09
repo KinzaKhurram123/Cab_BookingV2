@@ -17,15 +17,29 @@ import {rideHistory} from '../constant/arrays';
 import {FONTS, SIZES} from '../constant/sizes';
 import {windowWidth} from '../utility/utils';
 import Header from '../component/Header';
+import {useTheme} from '../context/ThemeContext';
 
 const HomeScreen = () => {
+  const {theme} = useTheme();
+
   return (
     <ScrollView
-      contentContainerStyle={styles.scrollContainer}
+      contentContainerStyle={[
+        styles.scrollContainer,
+        {backgroundColor: theme.background},
+      ]}
       showsVerticalScrollIndicator={true}>
-      <Header headerColor={Colors.white} hideUser={true} />
+      <Header headerColor={theme.background} hideUser={true} />
 
-      <View style={styles.header_view}>
+      <View
+        style={[
+          styles.header_view,
+          {
+            backgroundColor: theme.card,
+            borderTopColor: theme.primary,
+            shadowColor: theme.primary,
+          },
+        ]}>
         <View
           style={[
             styles.row_view,
@@ -36,16 +50,21 @@ const HomeScreen = () => {
           ]}>
           <View>
             <View style={styles.row_view}>
-              <CustomText isBold style={styles.heading}>
-                Hello{' '}
+              <CustomText isBold style={[styles.heading, {color: theme.text}]}>
+                Hello
               </CustomText>
-              <CustomText isBold style={styles.name_heading}>
+              <CustomText
+                isBold
+                style={[styles.name_heading, {color: theme.primary}]}>
                 Path Jhonson
               </CustomText>
             </View>
-            <CustomText style={styles.text}>Jhonson@gmail.com</CustomText>
+            <CustomText style={[styles.text, {color: theme.mediumGray}]}>
+              Jhonson@gmail.com
+            </CustomText>
           </View>
-          <View style={styles.image_view}>
+
+          <View style={[styles.image_view, {borderColor: theme.primary}]}>
             <CustomImage
               source={Images.user_image2}
               style={[
@@ -57,63 +76,93 @@ const HomeScreen = () => {
             />
           </View>
         </View>
-
-        <View style={styles.search_view}>
+        <View
+          style={[
+            styles.search_view,
+            {
+              backgroundColor: theme.lightGrey || '#F3F4F6',
+            },
+          ]}>
           <Icon
             name="location"
             as={Ionicons}
             size={SIZES.padding + 5}
-            color={Colors.red}
+            color={theme.error || '#DA3029'}
           />
           <View style={{marginLeft: SIZES.padding2}}>
-            <CustomText style={styles.location_heading} isBold>
+            <CustomText
+              style={[styles.location_heading, {color: theme.text}]}
+              isBold>
               Yellowstone National Park
             </CustomText>
-            <CustomText style={styles.location_text}>
+            <CustomText
+              style={[styles.location_text, {color: theme.veryLightGray}]}>
               Wyoming, Montana, Idaho
             </CustomText>
           </View>
         </View>
       </View>
-
-      <View style={styles.sub_view}>
-        <CustomText style={styles.title} isBold>
+      <View style={[styles.sub_view, {backgroundColor: theme.background}]}>
+        <CustomText style={[styles.title, {color: theme.text}]} isBold>
           Let's Book Your Ride :
         </CustomText>
 
         <VehicleCard />
 
-        <CustomText style={[styles.title, {marginTop: SIZES.padding}]} isBold>
+        <CustomText
+          style={[styles.title, {marginTop: SIZES.padding, color: theme.text}]}
+          isBold>
           Past Rides :
         </CustomText>
+
         <FlatList
           data={rideHistory}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity style={styles.past_ride_card}>
-                <View style={styles.history_image}>
+              <TouchableOpacity
+                style={[
+                  styles.past_ride_card,
+                  {
+                    backgroundColor: theme.card,
+                    shadowColor: theme.primary,
+                  },
+                ]}>
+                <View
+                  style={[
+                    styles.history_image,
+                    {
+                      backgroundColor: theme.background,
+                      shadowColor: theme.primary,
+                    },
+                  ]}>
                   <Icon
                     name="location-outline"
                     as={Ionicons}
                     size={SIZES.padding + 10}
-                    color={Colors.red}
+                    color={theme.primary}
                   />
                 </View>
-                <View
-                  style={{
-                    width: '78%',
-                  }}>
-                  <CustomText isBold style={styles.history_title}>
+
+                <View style={{width: '78%'}}>
+                  <CustomText
+                    isBold
+                    style={[styles.history_title, {color: theme.text}]}>
                     {item?.to}
                   </CustomText>
-                  <CustomText style={styles.history_txt}>
+                  <CustomText
+                    style={[styles.history_txt, {color: theme.mediumGray}]}>
                     {item?.from}
                   </CustomText>
                 </View>
-                <CustomText style={styles.date}>{item?.date}</CustomText>
+
+                <CustomText style={[styles.date, {color: theme.veryLightGray}]}>
+                  {item?.date}
+                </CustomText>
               </TouchableOpacity>
             );
           }}
+          keyExtractor={(item, index) => index.toString()}
+          scrollEnabled={false}
         />
       </View>
     </ScrollView>
@@ -125,13 +174,11 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    backgroundColor: Colors.white,
   },
   container: {
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: SIZES.base,
-    backgroundColor: Colors.white,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -139,10 +186,8 @@ const styles = StyleSheet.create({
   header_view: {
     width: SIZES.windowWidth * 0.92,
     height: SIZES.windowHeight * 0.22,
-    backgroundColor: Colors.white,
     alignSelf: 'center',
     marginTop: SIZES.padding2,
-    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
@@ -153,7 +198,6 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.padding,
     paddingVertical: SIZES.padding2,
     borderTopWidth: 6,
-    borderTopColor: Colors.themeColor,
   },
   sub_view: {
     width: SIZES.windowWidth,
@@ -167,23 +211,21 @@ const styles = StyleSheet.create({
   },
   heading: {
     ...FONTS.Bold22,
-    color: Colors.black,
   },
   name_heading: {
     ...FONTS.Bold22,
-    color: Colors.themeColor,
     textDecorationLine: 'underline',
     textDecorationStyle: 'solid',
   },
   text: {
     ...FONTS.Medium12,
-    color: Colors.mediumGray,
     textTransform: 'lowercase',
   },
   image_view: {
     width: SIZES.windowWidth * 0.18,
     height: SIZES.windowWidth * 0.18,
     borderRadius: SIZES.windowWidth / 2,
+    borderWidth: 2,
   },
   image: {
     width: '100%',
@@ -192,7 +234,6 @@ const styles = StyleSheet.create({
   search_view: {
     width: SIZES.windowWidth * 0.86,
     height: SIZES.windowWidth * 0.17,
-    backgroundColor: Colors.lightGrey,
     alignSelf: 'center',
     marginTop: SIZES.padding2,
     borderRadius: SIZES.padding2,
@@ -203,15 +244,12 @@ const styles = StyleSheet.create({
   },
   location_heading: {
     ...FONTS.Regular12,
-    color: Colors.black,
   },
   location_text: {
     ...FONTS.UrbanistLight10,
-    color: Colors.veryLightGray,
   },
   title: {
     ...FONTS.Bold16,
-    color: Colors.black,
     marginBottom: SIZES.h20,
   },
   flatListStyle: {
@@ -244,7 +282,6 @@ const styles = StyleSheet.create({
   },
   date: {
     ...FONTS.Regular11,
-    color: Colors.veryLightGray,
     paddingRight: SIZES.padding2,
     position: 'absolute',
     top: 10,
@@ -253,22 +290,26 @@ const styles = StyleSheet.create({
   past_ride_card: {
     width: windowWidth * 0.9,
     height: windowWidth * 0.2,
-    backgroundColor: Colors.lightGrey,
     marginBottom: SIZES.padding2,
     paddingHorizontal: SIZES.base,
     justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: SIZES.padding2,
     flexDirection: 'row',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 3,
   },
   history_image: {
     width: windowWidth * 0.16,
     height: windowWidth * 0.16,
-    backgroundColor: Colors.white,
     borderRadius: windowWidth / 2,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 6,
@@ -279,12 +320,10 @@ const styles = StyleSheet.create({
   },
   history_title: {
     ...FONTS.Bold12,
-    color: Colors.black,
     width: '70%',
   },
   history_txt: {
     ...FONTS.Medium11,
-    color: Colors.mediumGray,
     width: '80%',
   },
 });

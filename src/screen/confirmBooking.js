@@ -25,6 +25,7 @@ const RideBooking = () => {
   const [dropOffLocation, setDropOffLocation] = useState({});
   const [locationType, setLocationType] = useState('pickup');
   const [isYourLocation, setIsyourLocation] = useState(null);
+  const [address, setAddress] = useState('');
   const isFocused = useIsFocused();
   const mapRef = useRef(null);
   const [isNearDestination, setIsNearDestination] = useState(false);
@@ -126,7 +127,6 @@ const RideBooking = () => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data, 'daaaaaaaaaaaaaaaatttttttttttttttttaaaaaaaa');
       if (data.status === 'OK') {
         const givenaddress = data.results[0].formatted_address;
         setAddress(givenaddress);

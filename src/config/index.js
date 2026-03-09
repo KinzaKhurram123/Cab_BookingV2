@@ -2,7 +2,7 @@
 export const baseUrl = 'https://car-rental.cstmpanel.com';
 export const imageUrl = `${baseUrl}/api/images/`;
 export const profilePicUrl = `${baseUrl}/uploads`;
-export const GoogleApiKey = 'AIzaSyBhrOck4__D57wSJQnLzJ6XR-zwIgUiT_k';
+export const GoogleApiKey = 'AIzaSyDn4KET0DRdrsheEaBflpAee9U1zYRQ_kY';
 export const apiDataLimit = 10;
 export const validateEmail = email => {
   const re =

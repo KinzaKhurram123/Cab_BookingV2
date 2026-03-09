@@ -1,7 +1,7 @@
 import {Divider, Icon, View} from 'native-base';
 import React, {useRef} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {moderateScale} from 'react-native-size-matters';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Header from '../component/Header';
@@ -19,8 +19,18 @@ import navigationServices from '../navigator/navigationServices';
 
 const RideDetails = props => {
   const data = props?.route?.params?.pramsData;
+  console.log(data, 'dataaaaaaaaaaaaaaaaa');
   const mapRef = useRef(null);
-  console.log('-------------------<', data);
+
+  const pickupLocation = {
+    latitude: data?.pickupLocation?.lat || 0,
+    longitude: data?.pickupLocation?.lng || 0,
+  };
+  const dropOffLocation = {
+    latitude: data?.dropOffLocation?.lat || 0,
+    longitude: data?.dropOffLocation?.lng || 0,
+  };
+
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
@@ -35,14 +45,25 @@ const RideDetails = props => {
           showsMyLocationButton={true}
           customMapStyle={mapstyle}
           initialRegion={{
-            latitude: data.pickupLocation?.latitude || 0,
-            longitude: data.pickupLocation?.longitude || 0,
+            latitude: pickupLocation?.latitude || 0,
+            longitude: pickupLocation?.longitude || 0,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}>
+          {pickupLocation && (
+            <Marker
+              coordinate={{
+                latitude: pickupLocation.latitude,
+                longitude: pickupLocation.longitude,
+              }}
+              pinColor="black"
+              title="Pickup Location"
+            />
+          )}
+
           <MapViewDirections
-            origin={data?.pickupLocation}
-            destination={data?.dropOffLocation}
+            origin={pickupLocation}
+            destination={dropOffLocation}
             strokeColor={Colors.black}
             strokeWidth={6}
             apikey={GoogleApiKey}
@@ -63,6 +84,16 @@ const RideDetails = props => {
               });
             }}
           />
+          {dropOffLocation && (
+            <Marker
+              coordinate={{
+                latitude: dropOffLocation.latitude,
+                longitude: dropOffLocation.longitude,
+              }}
+              pinColor="black"
+              title="Dropoff Location"
+            />
+          )}
         </MapView>
         <View
           style={{
@@ -199,7 +230,7 @@ const RideDetails = props => {
                     ...FONTS.Regular14,
                     marginLeft: moderateScale(10, 0.6),
                   }}>
-                  DHA Phase 8 area
+                  {data?.pickupLocation?.name}
                 </CustomText>
               </TouchableOpacity>
             </View>
@@ -240,13 +271,13 @@ const RideDetails = props => {
                 }}
                 style={styles.locationPickerBtn}>
                 <CustomText
-                  numberOfLines={3}
+                  numberOfLines={2}
                   style={{
                     width: windowWidth * 0.7,
                     ...FONTS.Regular14,
                     marginLeft: moderateScale(10, 0.6),
                   }}>
-                  Korangi Creek / Creek Vistas area
+                  {data?.dropOffLocation?.name}
                 </CustomText>
               </TouchableOpacity>
             </View>

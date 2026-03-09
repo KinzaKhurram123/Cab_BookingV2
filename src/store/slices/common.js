@@ -1,19 +1,19 @@
-import { createSlice, current } from '@reduxjs/toolkit';
+import {createSlice, current} from '@reduxjs/toolkit';
 import moment from 'moment';
 
 const initialState = {
   userData: {},
-
   rideStart: false,
   rideData: {},
-
+  riderMode: false,
   riderEventData: {},
   userEventData: {},
   riderModalVisible: false,
   appIsInBackground: false,
   currentLocation: null,
   currentRideId: null,
-  currentStatus: null
+  currentStatus: null,
+  vechicaltype: '',
 };
 console.log('🚀 ~ currentLocation:', initialState?.currentLocation);
 console.log('🚀 ~ userData:', initialState.userData);
@@ -50,11 +50,17 @@ const CommonSlice = createSlice({
     },
     setCurrentRideId(state, action) {
       state.currentRideId = action.payload;
-      console.log("🚀 ~ setCurrentRideId ~ action.payload:", action.payload)
+      console.log('🚀 ~ setCurrentRideId ~ action.payload:', action.payload);
     },
     setCurrentStatus(state, action) {
-      state.currentStatus = action.payload
-    }
+      state.currentStatus = action.payload;
+    },
+    setRiderMode(state, action) {
+      state.riderMode = action.payload;
+    },
+    setVechicalType(state, action) {
+      state.vechicaltype = action.payload;
+    },
   },
 });
 
@@ -68,7 +74,9 @@ export const {
   setAppIsInBackground,
   setCurrentLocation,
   setCurrentRideId,
-  setCurrentStatus
+  setCurrentStatus,
+  setRiderMode,
+  setVechicalType,
 } = CommonSlice.actions;
 
 export default CommonSlice.reducer;

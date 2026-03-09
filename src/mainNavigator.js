@@ -13,16 +13,23 @@ import RideBooking from './screen/RideBooking';
 import SetRoutes from './screen/SetRoute';
 import RideDetails from './screen/RideDetails';
 import ConfirmBooking from './screen/confirmBooking';
-
+import {useSelector} from 'react-redux';
+import ChooseVechicle from './screen/chooseVechicle';
+import AcceptRideRequest from './screen/acceptRideRequest';
+import ThemeSettings from './screen/ThemeSetting';
 const Stack = createNativeStackNavigator();
 
 const MainNavigator = () => {
+  const riderMode = useSelector(state => state?.commonReducer?.riderMode);
+  const firstScreen = riderMode === true ? 'ChooseVechicle' : 'LoginScreen';
+
   return (
     <NavigationContainer ref={navigationServices.navigationRef}>
       <Stack.Navigator
-        initialRouteName="LoginScreen"
+        initialRouteName={firstScreen}
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="ChooseVechicle" component={ChooseVechicle} />
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
         <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
         <Stack.Screen name="OtpScreen" component={OtpScreen} />
@@ -32,6 +39,8 @@ const MainNavigator = () => {
         <Stack.Screen name="SetRoutes" component={SetRoutes} />
         <Stack.Screen name="RideDetails" component={RideDetails} />
         <Stack.Screen name="ConfirmBooking" component={ConfirmBooking} />
+        <Stack.Screen name="AcceptRideRequest" component={AcceptRideRequest} />
+        <Stack.Screen name="ThemeSettings" component={ThemeSettings} />
       </Stack.Navigator>
     </NavigationContainer>
   );

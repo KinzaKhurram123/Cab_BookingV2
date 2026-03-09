@@ -10,16 +10,18 @@ import {
 } from 'react-native';
 import {FONTS, SIZES} from '../constant/sizes';
 import {useState} from 'react';
-import {FontAwesome} from '@react-native-vector-icons/fontisto';
-import {Foundation} from '@react-native-vector-icons/fontisto';
+import {FontAwesome} from 'react-native-vector-icons/FontAwesome';
 import CustomText from './customText';
 import Colors from '../config/appTheme';
 import {Icon} from 'native-base';
 import {windowHeight, windowWidth} from '../utility/utils';
 import {moderateScale} from 'react-native-size-matters';
+import {useTheme} from '../context/ThemeContext';
 
 const TextInputWithTitle = props => {
+  const {theme} = useTheme();
   const [showPassword, setShowPassword] = useState(false);
+
   return (
     <>
       {props?.title && (
@@ -27,7 +29,7 @@ const TextInputWithTitle = props => {
           isBold
           style={[
             {
-              color: Colors.mediumGray,
+              color: theme.mediumGray,
               ...FONTS.Bold14,
               width: SIZES.windowWidth * props.viewWidth,
               paddingHorizontal: SIZES.h15,
@@ -46,12 +48,10 @@ const TextInputWithTitle = props => {
             borderWidth: props.border,
             backgroundColor: props.backgroundColor,
             borderBottomWidth: props.borderBottomWidth,
-            borderColor: props.borderColor
-              ? props.borderColor
-              : Colors.lightGrey,
+            borderColor: props.borderColor ? props.borderColor : theme.border,
           },
           props.elevation && {
-            shadowColor: Colors.themeColor,
+            shadowColor: theme.primary,
             shadowOffset: {
               width: 0,
               height: 4,
@@ -90,7 +90,7 @@ const TextInputWithTitle = props => {
         ]}>
         {props.foundation && (
           <Icon
-            color={props.iconColor}
+            color={props.iconColor || theme.primary}
             name={props.iconName}
             as={props.iconType}
             size={moderateScale(30, 0.2)}
@@ -107,7 +107,7 @@ const TextInputWithTitle = props => {
                 color:
                   props.color && !props.disable
                     ? props.color
-                    : Colors.veryLightGray,
+                    : theme.veryLightGray,
                 fontSize: moderateScale(16, 0.6),
               },
               props.numberOfLines > 1 && {
@@ -120,7 +120,6 @@ const TextInputWithTitle = props => {
                 position: 'absolute',
                 right: moderateScale(10, 0.3),
               },
-
               props.leftIcon && {
                 position: 'absolute',
                 left: moderateScale(10, 0.3),
@@ -136,6 +135,7 @@ const TextInputWithTitle = props => {
               style={[
                 {
                   width: SIZES.windowWidth * props.inputWidth,
+                  color: theme.text,
                 },
                 Platform.OS === 'android'
                   ? [
@@ -158,7 +158,9 @@ const TextInputWithTitle = props => {
               secureTextEntry={!showPassword}
               placeholder={`${props.placeholder}`}
               placeholderTextColor={
-                props.placeholderColor ? props.placeholderColor : Colors.white
+                props.placeholderColor
+                  ? props.placeholderColor
+                  : theme.mediumGray
               }
               keyboardType={props.keyboardType}
               autoCapitalize="none"
@@ -178,12 +180,12 @@ const TextInputWithTitle = props => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              {/* <Icon
+              <Icon
                 name={showPassword ? 'eye' : 'eye-slash'}
                 as={FontAwesome}
-                color={Colors.black}
+                color={theme.primary}
                 size={moderateScale(18, 0.3)}
-              /> */}
+              />
             </TouchableOpacity>
           </>
         ) : (
@@ -193,6 +195,7 @@ const TextInputWithTitle = props => {
               style={[
                 {
                   width: SIZES.windowWidth * props.inputWidth,
+                  color: props.disable ? theme.darkGray : theme.text,
                 },
                 Platform.OS === 'android'
                   ? styles.inputBox
@@ -204,7 +207,7 @@ const TextInputWithTitle = props => {
                   height: SIZES.windowHeight * props.inputHeight,
                 },
                 props.disable && {
-                  color: Colors.veryLightGray,
+                  color: theme.darkGray,
                 },
                 props.multiline && {
                   paddingTop: SIZES.h10,
@@ -212,7 +215,7 @@ const TextInputWithTitle = props => {
                   marginLeft: SIZES.h16,
                 },
                 props.color && {
-                  color: Colors.black,
+                  color: theme.text,
                 },
                 props.inputColor && {
                   color: props.inputColor,
@@ -222,7 +225,9 @@ const TextInputWithTitle = props => {
               value={props.value}
               placeholder={`${props.placeholder}`}
               placeholderTextColor={
-                props.placeholderColor ? props.placeholderColor : Colors.white
+                props.placeholderColor
+                  ? props.placeholderColor
+                  : theme.mediumGray
               }
               keyboardType={props.keyboardType}
               multiline={props.multiline || false}
@@ -236,6 +241,7 @@ const TextInputWithTitle = props => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   fieldSet: {
     width: Dimensions.get('window').width * 0.9,
@@ -255,4 +261,5 @@ const styles = StyleSheet.create({
     color: Colors.themeLightGray,
   },
 });
+
 export default TextInputWithTitle;

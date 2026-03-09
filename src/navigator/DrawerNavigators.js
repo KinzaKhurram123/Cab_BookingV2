@@ -1,24 +1,27 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {SIZES} from '../constant/sizes';
-import Drawer from '../component/drawer';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import HomeScreen from '../screen/HomeScreen';
+import React from 'react';
+import {StyleSheet} from 'react-native';
 import CustomDrawer from '../component/drawer';
-import WalletScreen from '../screen/WalletScreen';
-import HistoryScreen from '../screen/HistoryScreen';
+import {SIZES} from '../constant/sizes';
 import ChangeScreen from '../screen/ChangeScreen';
-import SaveAddress from '../screen/SaveAddress';
+import HistoryScreen from '../screen/HistoryScreen';
+import HomeScreen from '../screen/HomeScreen';
 import NotificationScreen from '../screen/Notifications';
+import SaveAddress from '../screen/SaveAddress';
 import Setting from '../screen/Setting';
+import WalletScreen from '../screen/WalletScreen';
+import DashBoardScreen from '../screen/dashboardScreen';
+import {useSelector} from 'react-redux';
 
 const DrawerNavigators = () => {
   const DrawerNavigation = createDrawerNavigator();
-  const firstScreen = 'PlaceholderScreen';
+  const riderMode = useSelector(state => state?.commonReducer?.riderMode);
+
+  const firstScreen = riderMode ? 'DashBoardScreen' : 'HomeScreen';
   return (
     <DrawerNavigation.Navigator
       drawerContent={props => <CustomDrawer {...props} />}
-      initialRouteName={'HomeScreen'}
+      initialRouteName={firstScreen}
       screenOptions={{
         headerShown: false,
         drawerStyle: {
@@ -28,6 +31,10 @@ const DrawerNavigators = () => {
         },
       }}>
       <DrawerNavigation.Screen name="HomeScreen" component={HomeScreen} />
+      <DrawerNavigation.Screen
+        name="DashBoardScreen"
+        component={DashBoardScreen}
+      />
       <DrawerNavigation.Screen name="WalletScreen" component={WalletScreen} />
       <DrawerNavigation.Screen name="HistoryScreen" component={HistoryScreen} />
       <DrawerNavigation.Screen name="ChangeScreen" component={ChangeScreen} />

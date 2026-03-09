@@ -1,3 +1,4 @@
+import {latitudeKeys} from 'geolib';
 import Images from '../assests/Appimages';
 import navigationServices from '../navigator/navigationServices';
 
@@ -213,107 +214,54 @@ export const drawer_items = [
   },
 ];
 
-export const notifications = [
+export const rider_drawer_item = [
   {
     id: 1,
-    type: 'ride_request',
-    title: '🚕 New Ride Request',
-    message: 'John Smith booked a cab from Downtown to Airport',
-    time: '2 min ago',
-    status: 'pending',
-    userImage: 'https://randomuser.me/api/portraits/men/1.jpg',
-    location: {
-      pickup: '123 Main St, Downtown',
-      dropoff: 'LAX Airport, Terminal 4',
+    name: 'DashBoard',
+    onPress: () => {
+      navigationServices.navigate('DashBoardScreen');
     },
-    background: '#E3F2FD',
-    text: '#0D47A1',
-    border: '#2196F3',
-    icon: '#1976D2',
   },
   {
     id: 2,
-    type: 'ride_confirmed',
-    title: '✅ Ride Confirmed',
-    message: 'Your ride is confirmed! Driver is on the way',
-    time: '5 min ago',
-    status: 'confirmed',
-    driverName: 'Michael Johnson',
-    vehicleNumber: 'CAL-1234',
-    vehicleModel: 'Toyota Camry 2023',
-    background: '#E8F5E9',
-    text: '#1B5E20',
-    border: '#4CAF50',
-    icon: '#2E7D32',
+    name: 'Profile',
+    onPress: () => {},
   },
-
-  // Driver Related - Purple Theme
+  {
+    id: 2,
+    name: 'Account',
+    onPress: () => {},
+  },
   {
     id: 3,
-    type: 'driver_assigned',
-    title: '👨‍✈️ Driver Assigned',
-    message: 'David Williams has been assigned to your ride - ETA 5 mins',
-    time: '10 min ago',
-    driverDetails: {
-      name: 'David Williams',
-      rating: 4.9,
-      phone: '+1 (310) 555-0123',
-      trips: 5280,
-    },
-    background: '#F3E5F5',
-    text: '#4A148C',
-    border: '#9C27B0',
-    icon: '#7B1FA2',
+    name: 'Booking',
   },
   {
     id: 4,
-    type: 'driver_arrived',
-    title: '📍 Driver Arrived',
-    message: 'Your driver has arrived - White Tesla Model 3',
-    time: '15 min ago',
-    vehicleInfo: {
-      model: 'Tesla Model 3',
-      color: 'White',
-      plate: 'TES-1234',
-    },
-    eta: '0 min',
-    background: '#E1F5FE',
-    text: '#01579B',
-    border: '#03A9F4',
-    icon: '#0288D1',
+    name: 'Payments',
   },
-
-  // Payment Related - Green Theme
   {
     id: 5,
-    type: 'payment_success',
-    title: '💰 Payment Successful',
-    message: '$45.50 charged to your Visa card ending in 1234',
-    time: '30 min ago',
-    amount: 45.5,
-    currency: 'USD',
-    paymentMode: 'Visa ****1234',
-    transactionId: 'TXN789012345',
-    background: '#E8F5E9',
-    text: '#1B5E20',
-    border: '#4CAF50',
-    icon: '#2E7D32',
+    name: 'Support & Help',
   },
   {
     id: 6,
-    type: 'payment_failed',
-    title: '❌ Payment Failed',
-    message: 'Your payment was declined. Please update payment method',
-    time: '1 hour ago',
-    errorReason: 'Card declined by bank',
-    alternative: 'Try Apple Pay or add new card',
-    background: '#FFEBEE',
-    text: '#B71C1C',
-    border: '#F44336',
-    icon: '#C62828',
+    name: 'Setting',
+    onPress: () => {
+      navigationServices.navigate('Setting');
+    },
   },
+  {
+    id: 7,
+    name: 'Refer & Earn',
+  },
+  {
+    id: 8,
+    name: 'Ride preferences',
+  },
+];
 
-  // Promotional & Offers - Orange Theme
+export const notifications = [
   {
     id: 7,
     type: 'offer',
@@ -381,7 +329,7 @@ export const notifications = [
     },
   },
 
-  // Emergency & Safety - Red Theme
+  // Emergency & Safety - Red Colors
   {
     id: 11,
     type: 'safety_alert',
@@ -633,6 +581,7 @@ export const settings_item = [
     id: 1,
     title: 'Dark Theme',
     status: 'off',
+    onPress: () => navigationServices.navigate('ThemeSettings'),
   },
   {
     id: 2,
@@ -658,6 +607,52 @@ export const settings_item = [
   },
 ];
 
+export const driverCategories = [
+  {
+    image: Images.car_image,
+    title: 'Cab Driver',
+    text: 'Drive passengers to their destinations safely and comfortably. Accept ride requests from nearby riders and earn by providing reliable city rides.',
+    value: 'cab',
+  },
+  {
+    image: Images.pet_card,
+    title: 'Bike Rider',
+    text: 'Offer quick and affordable bike rides around the city. Perfect for short trips and faster travel through traffic.',
+    value: 'bike',
+  },
+  {
+    image: Images.cargo_card,
+    title: 'Cargo Driver',
+    text: 'Deliver packages and goods across the city. Help businesses and customers transport items safely and on time.',
+    value: 'cargo',
+  },
+  {
+    image: Images.pet_delivery,
+    title: 'Pet Delivery Driver',
+    text: 'Transport pets safely and with care. Help pet owners move their pets comfortably to clinics, homes, or other locations.',
+    value: 'pet',
+  },
+];
+
+export const rideRequests = [
+  {
+    id: 2,
+    name: 'Emily Smith',
+    riderRating: 4.7,
+    pickupLocation: 'Union Station, Washington, DC',
+    dropoffLocation: 'Smithsonian Museum, Washington, DC',
+    distance: '2.5 mi',
+    duration: '10 min',
+    fare: '$12',
+    vehicleType: 'Cab',
+    image: Images.user_image2,
+    pickup_latitude: 24.9266,
+    pickup_longitude: 67.0336,
+    dropoff_latitude: 38.897095,
+    dropoff_longitude: -77.006332,
+  },
+];
+
 export default {
   social_logins,
   dummyUsers,
@@ -667,4 +662,6 @@ export default {
   vehicle_list,
   notifications,
   settings_item,
+  driverCategories,
+  rider_drawer_item,
 };

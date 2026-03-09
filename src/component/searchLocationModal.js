@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import Modal from 'react-native-modal';
 import {moderateScale} from 'react-native-size-matters';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
@@ -10,6 +10,7 @@ import {FONTS} from '../constant/sizes';
 import {Icon} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {GoogleApiKey} from '../config';
 
 const SearchLocationModal = ({
   isModalVisible,
@@ -21,14 +22,41 @@ const SearchLocationModal = ({
   onPressCurrentLocation,
   isyourLocation = false,
 }) => {
+  const handleSelect = (data, details) => {
+    const payload = {
+      name: data?.description ?? data?.structured_formatting?.main_text,
+      lat: details?.geometry?.location?.lat,
+      lng: details?.geometry?.location?.lng,
+    };
+
+    if (locationType === 'pickup') {
+      setPickupLocation(payload);
+    } else {
+      setdropOffLocation(payload);
+    }
+
+    setIsModalVisible(false);
+  };
+
   return (
     <Modal
       hasBackdrop={true}
+      coverScreen={true}
+      statusBarTranslucent={true}
+      backdropOpacity={0.4}
+      useNativeDriver={true}
+      useNativeDriverForBackdrop={true}
+      avoidKeyboard={true}
+      swipeDirection={['down']}
+      onSwipeComplete={() => setIsModalVisible(false)}
+      propagateSwipe={true}
       style={{
+        margin: 0,
         justifyContent: 'center',
         alignItems: 'center',
       }}
       isVisible={isModalVisible}
+      onBackButtonPress={() => setIsModalVisible(false)}
       onBackdropPress={() => {
         setIsModalVisible(false);
       }}>
@@ -87,7 +115,8 @@ const SearchLocationModal = ({
           </TouchableOpacity>
         )}
         <GooglePlacesAutocomplete
-          onFail={error => console.error(error, 'errrrrrorrrr')}
+          onFail={error => console.warn('Places error:', error)}
+          keyboardShouldPersistTaps="always"
           placeholder={
             locationType === 'pickup'
               ? ' select your pickup location'
@@ -98,31 +127,27 @@ const SearchLocationModal = ({
             ...FONTS.Regular13,
           }}
           onPress={(data, details = null) => {
-            console.log('Location ========>>>>', {
-              name: data?.description,
-              lat: details?.geometry?.location?.lat,
-              lng: details?.geometry?.location?.lng,
-            });
-            locationType == 'pickup'
-              ? setPickupLocation({
-                  name: data?.description,
-                  lat: details?.geometry?.location?.lat,
-                  lng: details?.geometry?.location?.lng,
-                })
-              : setdropOffLocation({
-                  name: data?.description,
-                  lat: details?.geometry?.location?.lat,
-                  lng: details?.geometry?.location?.lng,
-                });
-            setIsModalVisible(false);
+            handleSelect(data, details);
           }}
           query={{
-            key: 'AIzaSyBhrOck4__D57wSJQnLzJ6XR-zwIgUiT_k',
+            key: GoogleApiKey,
             language: 'en',
           }}
           isRowScrollable={true}
           fetchDetails={true}
+          GooglePlacesDetailsQuery={{fields: 'geometry'}}
+          enablePoweredByContainer={false}
+          debounce={200}
+          keyboardDismissMode="on-drag"
+          listViewProps={{
+            keyboardShouldPersistTaps: 'always',
+            nestedScrollEnabled: true,
+          }}
+          keepResultsAfterBlur={true}
           styles={{
+            container: {
+              flex: 0,
+            },
             textInputContainer: {
               width: windowWidth * 0.85,
               marginLeft: moderateScale(5, 0.6),
@@ -133,14 +158,18 @@ const SearchLocationModal = ({
               color: '#5d5d5d',
               fontSize: 16,
               borderWidth: 2,
-              borderColor: Colors.themeColorLight,
+              borderColor: Colors.ColorsColorLight,
               borderRadius: moderateScale(10, 0.6),
               backgroundColor: Colors.lightGrey,
             },
             listView: {
-              width: windowWidth * 0.8,
-              marginLeft: moderateScale(5, 0.6),
-              borderColor: Colors.veryLightGray,
+              width: windowWidth * 0.83,
+              borderColor: Colors.lightGrey,
+              alignSelf: 'center',
+              marginTop: moderateScale(20, 0.6),
+              borderWidth: 1,
+              maxHeight: windowHeight * 0.4,
+              backgroundColor: Colors.white,
             },
             description: {
               color: 'black',

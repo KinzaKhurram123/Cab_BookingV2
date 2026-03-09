@@ -11,8 +11,11 @@ import CustomText from '../component/customText';
 import Colors from '../config/appTheme';
 import {FONTS, SIZES} from '../constant/sizes';
 import navigationServices from '../navigator/navigationServices';
+import {moderateScale} from 'react-native-size-matters';
+import {useTheme} from '../context/ThemeContext';
 
 const Header = props => {
+  const {theme} = useTheme();
   const dispatch = useDispatch();
   const notification = useSelector(state => state.commonReducer.notification);
   const riderEvent = useSelector(state => state.commonReducer.riderEventData);
@@ -34,6 +37,7 @@ const Header = props => {
     navigation,
     textstyle,
     isGredient = false,
+    iconColor,
   } = props;
 
   const [searchText, setSearchText] = useState('');
@@ -50,6 +54,30 @@ const Header = props => {
     {label: 'Logout', value: 'Logout'},
   ];
 
+  const getHeaderBackground = () => {
+    if (headerColor) {
+      return headerColor;
+    }
+    if (isGredient) {
+      return theme.gradient || theme.themegredient;
+    }
+    return theme.background;
+  };
+
+  const getIconColor = () => {
+    if (iconColor) {
+      return iconColor;
+    }
+    return theme.text;
+  };
+
+  const getTitleColor = () => {
+    if (titleColor) {
+      return titleColor;
+    }
+    return theme.text;
+  };
+
   const renderLeftIcon = () => (
     <View
       style={{
@@ -64,18 +92,17 @@ const Header = props => {
           name={'arrow-back'}
           as={Ionicons}
           size={SIZES.h24 + 10}
-          color={Colors.black}
+          color={getIconColor()}
           onPress={() => {
             navigationN.goBack();
           }}
         />
       ) : (
         <Icon
-          style={[styles.menu, styles.shadowporp]}
           name={'menu'}
           as={Feather}
-          size={SIZES.h24}
-          color={Colors.black}
+          size={moderateScale(30, 0.6)}
+          color={getIconColor()}
           onPress={() => {
             navigationN.toggleDrawer();
           }}
@@ -85,7 +112,9 @@ const Header = props => {
   );
 
   const renderCenter = () => (
-    <CustomText style={[styles.text, textstyle]} isBold>
+    <CustomText
+      style={[styles.text, textstyle, {color: getTitleColor()}]}
+      isBold>
       {title}
     </CustomText>
   );
@@ -106,7 +135,7 @@ const Header = props => {
               borderRadius: SIZES.font,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: 'red',
+              backgroundColor: theme.error || '#FF0000',
               position: 'absolute',
               right: -4,
               zIndex: 1,
@@ -115,6 +144,7 @@ const Header = props => {
             <CustomText
               style={{
                 fontSize: 8,
+                color: theme.white,
               }}>
               {cartData?.length < 10 ? cartData?.length : '9+'}
             </CustomText>
@@ -125,16 +155,16 @@ const Header = props => {
           name={'shopping-cart'}
           as={Feather}
           size={SIZES.h14}
-          color={Colors.black}
+          color={getIconColor()}
           onPress={() => {
             if (token == null) {
-              Confirm();
+              Alert.alert('Login Required', 'Please login to view cart');
             } else if (cartData?.length > 0) {
               navigationServices.navigate('CartScreen');
             } else {
               return Platform.OS == 'android'
                 ? ToastAndroid.show('No Item in cart', ToastAndroid.SHORT)
-                : Alert('No Item in cart');
+                : Alert.alert('Cart Empty', 'No Item in cart');
             }
           }}
         />
@@ -146,11 +176,8 @@ const Header = props => {
           justifyContent: 'center',
           alignItems: 'center',
           height: SIZES.windowHeight * 0.045,
-          // backgroundColor: '#dedbdbc8',
           borderRadius: (SIZES.windowHeight * 0.045) / 2,
-        }}>
-        {/* Empty view or placeholder */}
-      </View>
+        }}></View>
     );
 
   return (
@@ -160,7 +187,7 @@ const Header = props => {
           style={[styles.header2, index && {zIndex: 1}]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
-          colors={headerColor ? headerColor : Colors.themegredient}>
+          colors={getHeaderBackground()}>
           {renderLeftIcon()}
           {renderCenter()}
           {!hideUser && cart && renderRightIcon()}
@@ -169,9 +196,11 @@ const Header = props => {
         <View
           style={[
             styles.header2,
-            index && {
-              zIndex: 1,
-              backgroundColor: headerColor ? headerColor : Colors.themeColor,
+            index && {zIndex: 1},
+            {
+              backgroundColor: getHeaderBackground(),
+              borderBottomWidth: 1,
+              borderBottomColor: theme.border,
             },
           ]}>
           {renderLeftIcon()}
@@ -183,11 +212,17 @@ const Header = props => {
   );
 };
 
+Header.defaultProps = {
+  showBack: false,
+  hideUser: false,
+  cart: false,
+  isGredient: false,
+};
+
 const styles = StyleSheet.create({
   header1: {
     width: SIZES.windowWidth,
     height: SIZES.windowHeight * 0.1,
-    backgroundColor: Colors.white,
     marginBottom: SIZES.base,
     justifyContent: 'center',
     shadowColor: '#000',
@@ -201,11 +236,9 @@ const styles = StyleSheet.create({
   },
   user_name: {
     fontSize: SIZES.h20,
-    color: Colors.blue,
   },
   text: {
     ...FONTS.Bold20,
-    color: Colors.black,
     textAlign: 'center',
     width: '90%',
   },
@@ -231,9 +264,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     paddingVertical: SIZES.h14,
     paddingHorizontal: SIZES.h14,
-    backgroundColor: Colors.white,
     marginTop: SIZES.h26,
-    borderColor: Colors.green,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -245,7 +276,6 @@ const styles = StyleSheet.create({
   },
   header2: {
     width: SIZES.windowWidth,
-    backgroundColor: Colors.white,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: SIZES.h20,

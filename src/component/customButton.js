@@ -12,8 +12,11 @@ import {FONTS, SIZES} from '../constant/sizes';
 import CustomText from './customText';
 import {Icon} from 'native-base';
 import {moderateScale} from 'react-native-size-matters';
+import {useTheme} from '../context/ThemeContext';
 
 const CustomButton = props => {
+  const {theme} = useTheme();
+
   const {
     activeOpacity,
     onPress,
@@ -48,174 +51,169 @@ const CustomButton = props => {
     style,
     btn_style,
   } = props;
+
+  const getButtonColors = () => {
+    if (disabled) {
+      return {
+        bg: theme.themeLightGray || '#8D8D8D',
+        text: theme.white || '#FFFFFF',
+        border: theme.themeLightGray || '#8D8D8D',
+      };
+    }
+
+    if (bgColor) {
+      return {
+        bg: bgColor,
+        text: textColor || theme.white,
+        border: borderColor || bgColor,
+      };
+    }
+
+    return {
+      bg: theme.primary || '#205205',
+      text: textColor || theme.white || '#FFFFFF',
+      border: borderColor || theme.primary || '#205205',
+    };
+  };
+
+  const getGradientColors = () => {
+    if (disabled) {
+      return [
+        theme.themeLightGray || '#8D8D8D',
+        theme.themeLightGray || '#8D8D8D',
+      ];
+    }
+
+    if (Array.isArray(bgColor)) {
+      return bgColor;
+    }
+
+    if (isGradient) {
+      return theme.button_gredient || ['#46cc00', '#339500'];
+    }
+
+    const color = getButtonColors().bg;
+    return [color, color];
+  };
+
+  const buttonColors = getButtonColors();
+  const gradientColors = getGradientColors();
+
+  const buttonStyle = [
+    styles.mainBtn,
+    {
+      width: width,
+      height: height,
+      borderWidth: borderWidth,
+      backgroundColor: isGradient ? 'transparent' : buttonColors.bg,
+      borderColor: buttonColors.border,
+      marginTop: marginTop || 0,
+      marginBottom: marginBottom || 0,
+    },
+    elevation && {
+      shadowColor: theme.themeBlack || '#000000',
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.32,
+      shadowRadius: 5.46,
+      elevation: 9,
+    },
+    alignSelf && {alignSelf: alignSelf},
+    justifyContent && {justifyContent: justifyContent},
+    marginRight && {marginRight: marginRight},
+    borderRadius && {borderRadius: borderRadius},
+    borderWidth && {borderWidth: borderWidth},
+    style,
+  ];
+
+  const renderContent = () => (
+    <>
+      {loader && (
+        <ActivityIndicator
+          style={styles.indicatorStyle}
+          size="small"
+          color={loaderColor || buttonColors.text}
+        />
+      )}
+
+      {iconIsImage && (
+        <View style={styles.iconImageContainer}>
+          {image && (
+            <CustomImage
+              source={image}
+              style={[styles.iconImage, {tintColor: buttonColors.text}]}
+            />
+          )}
+        </View>
+      )}
+
+      {iconName && iconType && (
+        <Icon
+          name={iconName}
+          as={iconType}
+          size={moderateScale(26, 0.6)}
+          color={buttonColors.text}
+          style={[styles.icon, iconStyle]}
+        />
+      )}
+
+      <CustomText
+        style={[
+          styles.text,
+          textstyle,
+          {
+            color: buttonColors.text,
+            fontSize: fontSize || SIZES.h13,
+          },
+          textTransform && {textTransform: textTransform},
+          disabled && {opacity: 0.6},
+          btn_style,
+        ]}
+        isBold={isBold}>
+        {text}
+      </CustomText>
+    </>
+  );
+
   return (
     <TouchableOpacity
-      activeOpacity={activeOpacity ? activeOpacity : 0.9}
+      activeOpacity={activeOpacity || 0.9}
       onPress={onPress}
-      style={[
-        styles.mainBtn,
-        {
-          width: width,
-          height: height,
-          borderWidth: borderWidth,
-          backgroundColor: bgColor,
-          borderColor: borderColor,
-          marginTop: marginTop || 0,
-          marginBottom: marginBottom || 0,
-        },
-        elevation && {
-          shadowColor: Colors.themeBlack,
-          shadowOffset: {
-            width: 0,
-            height: 4,
-          },
-          shadowOpacity: 0.32,
-          shadowRadius: 5.46,
-
-          elevation: 9,
-        },
-        alignSelf && {
-          alignSelf: alignSelf,
-        },
-        justifyContent && {
-          justifyContent: justifyContent,
-        },
-        marginRight && {
-          marginRight: marginRight,
-        },
-        borderRadius && {
-          borderRadius: borderRadius,
-        },
-        borderWidth && {
-          borderWidth: borderWidth,
-        },
-        disabled && {
-          backgroundColor: Colors.themeLightGray,
-          borderColor: Colors.themeLightGray,
-          color: Colors.white,
-        },
-        style,
-      ]}
+      style={buttonStyle}
       disabled={disabled}>
-      {disabled == false && isGradient ? (
+      {isGradient ? (
         <LinearGradient
-          style={{
-            flexDirection: 'row',
-            width: width,
-            height: height,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: borderRadius,
-          }}
+          style={[
+            styles.gradientContainer,
+            {
+              width: width,
+              height: height,
+              borderRadius: borderRadius || 5,
+            },
+          ]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
-          colors={bgColor}>
-          {loader && (
-            <ActivityIndicator
-              style={styles.indicatorStyle}
-              size="small"
-              color={loaderColor ? loaderColor : Colors.white}
-            />
-          )}
-          {iconIsImage && (
-            <View
-              style={{
-                width: SIZES.windowWidth * 0.1,
-                height: SIZES.windowWidth * 0.1,
-                overflow: 'hidden',
-              }}>
-              {/* <CustomImage
-                source={require('../Assets/Images/goal.png')}
-                style={{ width: '100%', height: '100%' }}
-              /> */}
-            </View>
-          )}
-          {iconName && (
-            <Icon
-              name={iconName}
-              as={iconType}
-              size={moderateScale(26, 0.6)}
-              color={Colors.white}
-              style={{
-                marginRight: moderateScale(6, 0.5),
-              }}
-            />
-          )}
-          <CustomText
-            style={[
-              styles.text,
-              // textStyle && textStyle,
-              {
-                color: textColor,
-                fontSize: fontSize ? fontSize : SIZES.h13,
-              },
-              textTransform && {
-                textTransform: textTransform,
-              },
-              btn_style,
-            ]}
-            isRegular={isBold ? false : true}
-            isBold={isBold ? true : false}>
-            {text}
-          </CustomText>
+          colors={gradientColors}>
+          {renderContent()}
         </LinearGradient>
       ) : (
-        <>
-          {loader && (
-            <ActivityIndicator
-              style={styles.indicatorStyle}
-              size="small"
-              color={loaderColor ? loaderColor : Colors.white}
-            />
-          )}
-          {iconIsImage && (
-            <View
-              style={{
-                width: SIZES.windowWidth * 0.07,
-                marginRight: SIZES.h10,
-                height: SIZES.windowWidth * 0.07,
-                overflow: 'hidden',
-              }}>
-              {/* <CustomImage
-                source={require('../Assets/Images/goal.png')}
-                style={{ width: '100%', height: '100%', tintColor: 'black' }}
-              /> */}
-            </View>
-          )}
-          {iconName && (
-            <Icon
-              name={iconName}
-              as={iconType}
-              size={moderateScale(26, 0.6)}
-              color={Colors.white}
-              style={{
-                marginRight: moderateScale(6, 0.5),
-              }}
-            />
-          )}
-          <CustomText
-            style={[
-              styles.text,
-              textstyle,
-              {
-                color: textColor,
-              },
-              textTransform && {
-                textTransform: textTransform,
-              },
-              disabled && {
-                color: Colors.white,
-                opacity: 0.6,
-              },
-            ]}
-            isRegular={isBold ? false : true}
-            isBold={isBold ? true : false}>
-            {text}
-          </CustomText>
-        </>
+        renderContent()
       )}
     </TouchableOpacity>
   );
+};
+
+CustomButton.defaultProps = {
+  activeOpacity: 0.9,
+  width: '90%',
+  height: moderateScale(48, 0.6),
+  borderRadius: 8,
+  isGradient: false,
+  disabled: false,
+  isBold: true,
+  textTransform: 'uppercase',
 };
 
 const styles = StyleSheet.create({
@@ -227,9 +225,16 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingHorizontal: SIZES.padding,
     paddingVertical: SIZES.base,
+    overflow: 'hidden',
+  },
+  gradientContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: SIZES.padding,
+    paddingVertical: SIZES.base,
   },
   text: {
-    color: 'white',
     textTransform: 'uppercase',
     textAlign: 'center',
     letterSpacing: 0.9,
@@ -238,6 +243,19 @@ const styles = StyleSheet.create({
   indicatorStyle: {
     paddingRight: 5,
     paddingLeft: I18nManager.isRTL ? 5 : 0,
+  },
+  icon: {
+    marginRight: moderateScale(6, 0.5),
+  },
+  iconImageContainer: {
+    width: SIZES.windowWidth * 0.07,
+    marginRight: SIZES.h10,
+    height: SIZES.windowWidth * 0.07,
+    overflow: 'hidden',
+  },
+  iconImage: {
+    width: '100%',
+    height: '100%',
   },
 });
 
