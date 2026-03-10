@@ -91,7 +91,7 @@ const LoginScreen = () => {
           </CustomText>
           <CustomButton
             text={'Sign In'}
-            textColor={Colors.white}             
+            textColor={Colors.white}
             width={SIZES.windowWidth * 0.8}
             height={SIZES.windowHeight * 0.07}
             marginTop={SIZES.padding}
@@ -120,7 +120,7 @@ const LoginScreen = () => {
           </View>
           <View style={styles.row_view}>
             {arrays.social_logins?.map(item => (
-              <View key={item.id} style={styles.icon_view}>
+              <View style={styles.icon_view}>
                 <CustomImage source={item?.image} style={styles.image} />
               </View>
             ))}

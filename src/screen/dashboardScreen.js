@@ -84,7 +84,6 @@ const DashBoardScreen = () => {
             </CustomText>
           </View>
 
-          {/* Today's Earnings Card */}
           <View
             style={[
               styles.card_small_view,

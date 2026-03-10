@@ -1,11 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Header from '../component/Header';
 import Colors from '../config/appTheme';
 import {FONTS, SIZES} from '../constant/sizes';
 import {windowHeight, windowWidth} from '../utility/utils';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {Divider, Icon, View} from 'native-base';
+import {Divider, Icon} from 'native-base';
 import {moderateScale} from 'react-native-size-matters';
 import CustomImage from '../component/customImage';
 import Images from '../assests/Appimages';
@@ -116,19 +116,16 @@ const AcceptRideRequest = props => {
     getCurrentLocation();
   }, [isFocused]);
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContainer}
-      showsVerticalScrollIndicator={true}>
+    <View style={styles.scrollContainer}>
       <MapView
         ref={mapRef}
         style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        urlTemplate="https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=AIzaSyBzZFk3vPXDKBDyD3mHAyOeOvGmSiwhel4"
-        // showsMyLocationButton={true}
-        customMapStyle={mapstyle}
+        showsMyLocationButton={true}
+        onMapReady={() => console.log('Map is ready')}
+        onError={error => console.log('Map error:', error)}
         initialRegion={{
-          latitude: currentPosition?.latitude,
-          longitude: currentPosition?.latitude,
+          latitude: currentPosition?.latitude || 37.78825,
+          longitude: currentPosition?.longitude || -122.4324,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
@@ -191,7 +188,7 @@ const AcceptRideRequest = props => {
         />
       </View>
       <View style={styles.bottom_main_view}></View>
-    </ScrollView>
+    </View>
   );
 };
 

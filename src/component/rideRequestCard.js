@@ -148,9 +148,9 @@ const RideRequestCard = ({item}) => {
         isBold
         isGradient
         elevation
-        onPress={() =>
-          navigationServices.navigate('AcceptRideRequest', {data: item})
-        }
+        // onPress={() =>
+        //   navigationServices.navigate('AcceptRideRequest', {data: item})
+        // }
       />
     </View>
   );
@@ -212,7 +212,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: moderateScale(2, 0.2),
     alignItems: 'center',
-    marginLeft: moderateScale(25, 0.6),
   },
   info_box: {
     flexDirection: 'row',

@@ -150,6 +150,13 @@ export const drawer_items = [
     },
   },
   {
+    id: 8,
+    name: 'Edit Profile',
+    onPress: () => {
+      navigationServices.navigate('UserEditProfile');
+    },
+  },
+  {
     id: 3,
     name: 'Saved Locations',
     onPress: () => {
@@ -225,21 +232,26 @@ export const rider_drawer_item = [
   {
     id: 2,
     name: 'Profile',
-    onPress: () => {},
+    onPress: () => {
+      navigationServices.navigate('RiderEditProfile');
+    },
   },
-  {
-    id: 2,
-    name: 'Account',
-    onPress: () => {},
-  },
+  // {
+  //   id: 2,
+  //   name: 'Account',
+  //   onPress: () => {},
+  // },
   {
     id: 3,
     name: 'Booking',
+    onPress: () => {
+      navigationServices.navigate('MyBookingScreen');
+    },
   },
-  {
-    id: 4,
-    name: 'Payments',
-  },
+  // {
+  //   id: 4,
+  //   name: 'Payments',
+  // },
   {
     id: 5,
     name: 'Support & Help',
@@ -653,6 +665,122 @@ export const rideRequests = [
   },
 ];
 
+export const ridesData = [
+  // Active Rides
+  {
+    id: 1,
+    driverName: 'Michael Chen',
+    carModel: 'Toyota Camry',
+    carNumber: 'ABC-1234',
+    carColor: 'Silver',
+    rating: 4.8,
+    pickupLocation: '1012 Ocean Avenue, New York',
+    dropoffLocation: 'JFK International Airport',
+    distance: '15.2 km',
+    duration: '25 min',
+    fare: '$24.50',
+    date: 'Jan 04, 2023',
+    time: '17:00 PM',
+    status: 'Active',
+    driverImage: Images.user_image2,
+    carImage: Images.carimage,
+  },
+  {
+    id: 2,
+    driverName: 'Sarah Johnson',
+    carModel: 'Honda Civic',
+    carNumber: 'XYZ-5678',
+    carColor: 'Black',
+    rating: 4.9,
+    pickupLocation: '1901 Thornridge Cir. Sh',
+    dropoffLocation: 'Grand Central Station',
+    distance: '8.5 km',
+    duration: '18 min',
+    fare: '$18.75',
+    date: 'Jan 07, 2023',
+    time: '18:00 PM',
+    status: 'Active',
+    driverImage: Images.user_image2,
+    carImage: Images.carimage,
+  },
+
+  // Completed Rides
+  {
+    id: 3,
+    driverName: 'David Kumar',
+    carModel: 'Toyota Corolla',
+    carNumber: 'LMN-9012',
+    carColor: 'White',
+    rating: 4.7,
+    pickupLocation: '4517 Washington Ave',
+    dropoffLocation: 'Times Square',
+    distance: '5.2 km',
+    duration: '12 min',
+    fare: '$14.30',
+    date: 'Jan 20, 2023',
+    time: '18:30 PM',
+    status: 'Completed',
+    driverImage: Images.user_image2,
+    carImage: Images.carimage,
+  },
+  {
+    id: 4,
+    driverName: 'Emily Watson',
+    carModel: 'Hyundai Elantra',
+    carNumber: 'DEF-3456',
+    carColor: 'Blue',
+    rating: 4.9,
+    pickupLocation: '2118 Thornridge Cir. Syracuse',
+    dropoffLocation: 'Central Park',
+    distance: '10.8 km',
+    duration: '22 min',
+    fare: '$22.50',
+    date: 'Jan 15, 2023',
+    time: '19:00 PM',
+    status: 'Completed',
+    driverImage: Images.user_image2,
+    carImage: Images.carimage,
+  },
+
+  // Cancelled Rides
+  {
+    id: 5,
+    driverName: 'Robert Smith',
+    carModel: 'Nissan Altima',
+    carNumber: 'GHI-7890',
+    carColor: 'Gray',
+    rating: 4.5,
+    pickupLocation: '6391 Elgin St. Celina',
+    dropoffLocation: 'Brooklyn Bridge',
+    distance: '12.5 km',
+    duration: '28 min',
+    fare: '$28.75',
+    date: 'Jan 12, 2023',
+    time: '20:00 PM',
+    status: 'Cancelled',
+    driverImage: Images.user_image2,
+    carImage: Images.carimage,
+  },
+  {
+    id: 6,
+    driverName: 'Lisa Wang',
+    carModel: 'Kia Optima',
+    carNumber: 'JKL-1234',
+    carColor: 'Red',
+    rating: 4.6,
+    pickupLocation: '3891 Ranchview Dr. Rich',
+    dropoffLocation: 'Staten Island Ferry',
+    distance: '18.3 km',
+    duration: '35 min',
+    fare: '$32.00',
+    date: 'Jan 10, 2023',
+    time: '21:00 PM',
+    status: 'Cancelled',
+    driverImage: Images.user_image2,
+    carImage: Images.carimage,
+  },
+];
+
 export default {
   social_logins,
   dummyUsers,
@@ -664,4 +792,5 @@ export default {
   settings_item,
   driverCategories,
   rider_drawer_item,
+  ridesData,
 };

@@ -98,26 +98,11 @@ const CustomDrawer = React.memo(() => {
               </TouchableOpacity>
             ))}
           </View>
-          {!riderMode && (
-            <CustomButton
-              text={riderMode ? 'Rider Mode' : 'Driver Mode'}
-              textColor="#FFFFFF"
-              width={SIZES.windowWidth * 0.7}
-              height={SIZES.windowHeight * 0.08}
-              borderRadius={SIZES.base}
-              isBold
-              elevation
-              onPress={() => {
-                dispatch(setRiderMode(!riderMode));
-              }}
-              style={styles.driverButton}
-            />
-          )}
-
           <View style={[styles.end_view, {borderTopColor: '#E0E0E0'}]}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('LoginScreen');
+                dispatch(setRiderMode(false));
+                navigation.navigate('SelectUserTypeScreen');
               }}
               style={styles.logoutButton}>
               <View style={styles.drawerItemContent}>

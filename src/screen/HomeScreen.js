@@ -55,7 +55,7 @@ const HomeScreen = () => {
               </CustomText>
               <CustomText
                 isBold
-                style={[styles.name_heading, {color: theme.primary}]}>
+                style={[styles.name_heading, {color: theme.text}]}>
                 Path Jhonson
               </CustomText>
             </View>
@@ -91,7 +91,7 @@ const HomeScreen = () => {
           />
           <View style={{marginLeft: SIZES.padding2}}>
             <CustomText
-              style={[styles.location_heading, {color: theme.text}]}
+              style={[styles.location_heading, {color: theme.mediumGray}]}
               isBold>
               Yellowstone National Park
             </CustomText>
@@ -139,7 +139,7 @@ const HomeScreen = () => {
                     name="location-outline"
                     as={Ionicons}
                     size={SIZES.padding + 10}
-                    color={theme.primary}
+                    color={theme.width}
                   />
                 </View>
 

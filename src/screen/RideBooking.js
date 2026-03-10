@@ -1,11 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Header from '../component/Header';
 import Colors from '../config/appTheme';
 import {FONTS, SIZES} from '../constant/sizes';
 import {windowHeight, windowWidth} from '../utility/utils';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {Divider, Icon, View} from 'native-base';
+import {Divider, Icon} from 'native-base';
 import {moderateScale} from 'react-native-size-matters';
 import CustomImage from '../component/customImage';
 import Images from '../assests/Appimages';
@@ -151,44 +151,40 @@ const RideBooking = () => {
     pickupLocation: isYourLocation ? currentPosition : pickupLocation,
     dropOffLocation: dropOffLocation,
   };
+  console.log('Google API Key:', GoogleApiKey);
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.scrollContainer,
-        {backgroundColor: theme.background},
-      ]}
-      showsVerticalScrollIndicator={true}>
+    <View style={styles.scrollContainer}>
       <MapView
-        pointerEvents={isModalVisible ? 'none' : 'auto'}
         ref={mapRef}
         style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        urlTemplate="https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=AIzaSyBzZFk3vPXDKBDyD3mHAyOeOvGmSiwhel4"
         showsMyLocationButton={true}
-        customMapStyle={mapstyle}
+        showsUserLocation={true}
+        onMapReady={() => console.log('Map is ready')}
+        onError={error => console.log('Map error:', error)}
         initialRegion={{
-          latitude: currentPosition.latitude || 0,
-          longitude: currentPosition.longitude || 0,
+          latitude: currentPosition.latitude || 37.78825,
+          longitude: currentPosition.longitude || -122.4324,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
-        <PulsingMarker
-          coordinate={{
-            latitude: currentPosition?.latitude,
-            longitude: currentPosition?.longitude,
-          }}
-          color={theme.primary}
-          text="📍"
-        />
+        {isValidCoordinate(currentPosition) && (
+          <PulsingMarker
+            coordinate={{
+              latitude: currentPosition?.latitude,
+              longitude: currentPosition?.longitude,
+            }}
+            color={theme.primary}
+            text="📍"
+          />
+        )}
       </MapView>
-
-      <View style={styles.overlay}>
+      <View style={styles.overlay} pointerEvents="box-none">
         <View
           style={[
             styles.locationCard,
             {
-              backgroundColor: theme.card,
+              backgroundColor: theme.white,
               shadowColor: theme.primary,
             },
           ]}>
@@ -207,7 +203,7 @@ const RideBooking = () => {
               style={styles.locationPickerBtn}>
               <CustomText
                 numberOfLines={3}
-                style={[styles.locationText, {color: theme.text}]}>
+                style={[styles.locationText, {color: theme.veryLightGray}]}>
                 {Object.keys(pickupLocation).length > 0
                   ? isYourLocation
                     ? 'Your Live Location'
@@ -225,7 +221,7 @@ const RideBooking = () => {
           </View>
 
           <View style={styles.dotView}>
-            <View style={{gap: -5}}>
+            <View style={{gap: -3}}>
               <Icon
                 as={Entypo}
                 name="dots-two-vertical"
@@ -263,7 +259,7 @@ const RideBooking = () => {
               style={styles.locationPickerBtn}>
               <CustomText
                 numberOfLines={2}
-                style={[styles.locationText, {color: theme.text}]}>
+                style={[styles.locationText, {color: theme.veryLightGray}]}>
                 {Object.keys(dropOffLocation).length > 0
                   ? dropOffLocation?.name
                   : 'Choose Your Drop Location'}
@@ -289,7 +285,7 @@ const RideBooking = () => {
               <View
                 style={[
                   styles.small_card,
-                  {backgroundColor: theme.card, shadowColor: theme.primary},
+                  {backgroundColor: theme.white, shadowColor: theme.primary},
                 ]}>
                 <View style={styles.vehicleImageContainer}>
                   <CustomImage
@@ -299,7 +295,7 @@ const RideBooking = () => {
                 </View>
                 <View style={styles.vehicleInfo}>
                   <CustomText
-                    style={[styles.heading, {color: theme.text}]}
+                    style={[styles.heading, {color: theme.primary}]}
                     isBold>
                     Basic
                   </CustomText>
@@ -315,12 +311,11 @@ const RideBooking = () => {
                 </View>
               </View>
 
-              {/* Premium Card */}
               <View
                 style={[
                   styles.image_card_view,
                   {
-                    backgroundColor: theme.card,
+                    backgroundColor: theme.white,
                     shadowColor: theme.primary,
                     borderBottomColor: theme.primary,
                   },
@@ -332,7 +327,7 @@ const RideBooking = () => {
                   />
                 </View>
                 <CustomText
-                  style={[styles.heading, {color: theme.text}]}
+                  style={[styles.heading, {color: theme.primary}]}
                   isBold>
                   Premium
                 </CustomText>
@@ -346,11 +341,10 @@ const RideBooking = () => {
                 </CustomText>
               </View>
 
-              {/* Standard Card */}
               <View
                 style={[
                   styles.small_card,
-                  {backgroundColor: theme.card, shadowColor: theme.primary},
+                  {backgroundColor: theme.white, shadowColor: theme.primary},
                 ]}>
                 <View style={styles.vehicleImageContainer}>
                   <CustomImage
@@ -360,7 +354,7 @@ const RideBooking = () => {
                 </View>
                 <View style={styles.vehicleInfo}>
                   <CustomText
-                    style={[styles.heading, {color: theme.text}]}
+                    style={[styles.heading, {color: theme.primary}]}
                     isBold>
                     Standard
                   </CustomText>
@@ -377,15 +371,12 @@ const RideBooking = () => {
               </View>
             </View>
 
-            {/* Divider */}
             <View style={styles.dividerContainer}>
               <View style={[styles.divider, {backgroundColor: theme.border}]} />
-
-              {/* Payment Method */}
               <View
                 style={[
                   styles.paymentCard,
-                  {backgroundColor: `${theme.primary}10`},
+                  {backgroundColor: `${theme.primary}`},
                 ]}>
                 <CustomText
                   isBold
@@ -409,7 +400,6 @@ const RideBooking = () => {
             </View>
           </View>
 
-          {/* Book Now Button */}
           <CustomButton
             text={'Book Now'}
             textColor={theme.white}
@@ -428,7 +418,6 @@ const RideBooking = () => {
         </View>
       </View>
 
-      {/* Search Location Modal */}
       <SearchLocationModal
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
@@ -441,7 +430,7 @@ const RideBooking = () => {
           setPickUpLocation(currentPosition);
         }}
       />
-    </ScrollView>
+    </View>
   );
 };
 
@@ -449,14 +438,14 @@ export default RideBooking;
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    flexGrow: 1,
+    flex: 1,
+    backgroundColor: Colors.white,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.3)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -490,7 +479,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: moderateScale(2, 0.2),
     alignItems: 'center',
-    marginLeft: moderateScale(30, 0.2),
   },
   bottomSheet: {
     width: windowWidth,
@@ -547,7 +535,6 @@ const styles = StyleSheet.create({
   vehicleImageContainer: {
     width: windowWidth * 0.2,
     height: windowWidth * 0.2,
-    alignItems: 'center',
   },
   vehicleImage: {
     width: '100%',

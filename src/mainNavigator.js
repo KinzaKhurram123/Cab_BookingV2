@@ -17,11 +17,13 @@ import {useSelector} from 'react-redux';
 import ChooseVechicle from './screen/chooseVechicle';
 import AcceptRideRequest from './screen/acceptRideRequest';
 import ThemeSettings from './screen/ThemeSetting';
+import SelectUserTypeScreen from './screen/SelectUserTypeScreen';
 const Stack = createNativeStackNavigator();
 
 const MainNavigator = () => {
   const riderMode = useSelector(state => state?.commonReducer?.riderMode);
-  const firstScreen = riderMode === true ? 'ChooseVechicle' : 'LoginScreen';
+  const firstScreen =
+    riderMode === true ? 'ChooseVechicle' : 'SelectUserTypeScreen';
 
   return (
     <NavigationContainer ref={navigationServices.navigationRef}>
@@ -41,6 +43,10 @@ const MainNavigator = () => {
         <Stack.Screen name="ConfirmBooking" component={ConfirmBooking} />
         <Stack.Screen name="AcceptRideRequest" component={AcceptRideRequest} />
         <Stack.Screen name="ThemeSettings" component={ThemeSettings} />
+        <Stack.Screen
+          name="SelectUserTypeScreen"
+          component={SelectUserTypeScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

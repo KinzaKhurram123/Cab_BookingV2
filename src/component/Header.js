@@ -38,6 +38,7 @@ const Header = props => {
     textstyle,
     isGredient = false,
     iconColor,
+    isborder = true,
   } = props;
 
   const [searchText, setSearchText] = useState('');
@@ -197,7 +198,7 @@ const Header = props => {
           style={[
             styles.header2,
             index && {zIndex: 1},
-            {
+            isborder && {
               backgroundColor: getHeaderBackground(),
               borderBottomWidth: 1,
               borderBottomColor: theme.border,
