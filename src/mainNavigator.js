@@ -21,14 +21,10 @@ import SelectUserTypeScreen from './screen/SelectUserTypeScreen';
 const Stack = createNativeStackNavigator();
 
 const MainNavigator = () => {
-  const riderMode = useSelector(state => state?.commonReducer?.riderMode);
-  const firstScreen =
-    riderMode === true ? 'ChooseVechicle' : 'SelectUserTypeScreen';
-
   return (
     <NavigationContainer ref={navigationServices.navigationRef}>
       <Stack.Navigator
-        initialRouteName={firstScreen}
+        initialRouteName={'LoginScreen'}
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="ChooseVechicle" component={ChooseVechicle} />

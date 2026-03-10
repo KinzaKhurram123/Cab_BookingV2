@@ -150,13 +150,6 @@ export const drawer_items = [
     },
   },
   {
-    id: 8,
-    name: 'Edit Profile',
-    onPress: () => {
-      navigationServices.navigate('UserEditProfile');
-    },
-  },
-  {
     id: 3,
     name: 'Saved Locations',
     onPress: () => {
@@ -180,9 +173,6 @@ export const drawer_items = [
   {
     id: 5,
     name: 'Safety',
-    // onPress: () => {
-    //   navigationServices.navigate('ChangeScreen');
-    // },
   },
   {
     id: 5,
@@ -194,30 +184,18 @@ export const drawer_items = [
   {
     id: 5,
     name: 'Support',
-    // onPress: () => {
-    //   navigationServices.navigate('Setting');
-    // },
   },
   {
     id: 5,
-    name: 'HElp',
-    // onPress: () => {
-    //   navigationServices.navigate('Setting');
-    // },
+    name: 'Help',
   },
   {
     id: 6,
     name: 'Privacy Policy',
-    // onPress: () => {
-    //   navigationServices.navigate('PrivacyPolicy');
-    // },
   },
   {
     id: 7,
     name: 'Terms & Conditions',
-    // onPress: () => {
-    //   navigationServices.navigate('TermsAndConditions');
-    // },
   },
 ];
 
@@ -589,12 +567,12 @@ export const notifications = [
 ];
 
 export const settings_item = [
-  {
-    id: 1,
-    title: 'Dark Theme',
-    status: 'off',
-    onPress: () => navigationServices.navigate('ThemeSettings'),
-  },
+  // {
+  //   id: 1,
+  //   title: 'Dark Theme',
+  //   status: 'off',
+  //   onPress: () => navigationServices.navigate('ThemeSettings'),
+  // },
   {
     id: 2,
     title: 'Display Traffic',

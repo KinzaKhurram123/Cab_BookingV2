@@ -27,19 +27,21 @@ const baseColors = {
 
 export const themeColors = {
   default: {
-    primary: '#205205',
-    primaryLight: '#46cc00',
-    secondary: '#72A131',
+    primary: '#44BFD2',
+    secondary: '#6CD4E8',
+    accent: '#2E8B9A',
     background: '#FFFFFF',
-    text: '#000000',
-    card: '#F3F4F6',
+    text: '#1A1A1A',
+    card: '#F5F8FA',
+    cardAlt: '#EFF2F5',
+    cardDark: '#2C3E50',
     border: '#A8A8A8',
     accent: '#EBB645',
     success: '#14B25C',
     error: '#DA3029',
     info: '#00ADEF',
-    gradient: ['#339500', '#11A44C', '#46cc00'],
-    buttonGradient: ['#46cc00', '#339500'],
+    gradient: ['#44BFD2', '#6CD4E8', '#2E8B9A'],
+    buttonGradient: ['#44BFD2', '#26727E'],
   },
 
   green: {

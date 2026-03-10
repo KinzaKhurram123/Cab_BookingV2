@@ -9,15 +9,15 @@ import arrays from '../constant/arrays';
 import {FONTS, SIZES} from '../constant/sizes';
 import navigationServices from '../navigator/navigationServices';
 import {windowWidth} from '../utility/utils';
+import {useTheme} from '../context/ThemeContext';
 
 const LoginScreen = () => {
+  const {theme} = useTheme();
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={true}>
-      <ImageBackground
-        source={Images.background_splash_screen}
-        style={styles.gradient}>
+      <ImageBackground source={Images.background_image} style={styles.gradient}>
         <View
           style={{
             height: SIZES.windowHeight * 0.14,
@@ -60,7 +60,7 @@ const LoginScreen = () => {
             backgroundColor={'rgba(230, 232, 230,0.6)'}
             marginTop={SIZES.h10}
             placeholderColor={Colors.mediumGray}
-            borderColor={Colors.mediumGray}
+            borderColor={theme.secondary}
             inputStyle={{
               borderBottomWidth: 3,
               borderBottomColor: Colors.black,
@@ -73,7 +73,7 @@ const LoginScreen = () => {
             viewHeight={0.075}
             viewWidth={0.85}
             inputWidth={0.8}
-            borderColor={Colors.mediumGray}
+            borderColor={theme.secondary}
             fontSize={SIZES.h14}
             borderRadius={10}
             backgroundColor={'rgba(230, 232, 230,0.6)'}
@@ -85,7 +85,7 @@ const LoginScreen = () => {
             }}
           />
           <CustomText
-            style={styles.forgotpassword}
+            style={[styles.forgotpassword, {color: theme.primary}]}
             onPress={() => navigationServices.navigate('ForgetPassword')}>
             Forgot password ?
           </CustomText>
@@ -95,7 +95,7 @@ const LoginScreen = () => {
             width={SIZES.windowWidth * 0.8}
             height={SIZES.windowHeight * 0.07}
             marginTop={SIZES.padding}
-            bgColor={Colors.button_gredient}
+            bgColor={theme.buttonGradient}
             borderRadius={SIZES.h16}
             isBold
             isGradient
@@ -134,7 +134,7 @@ const LoginScreen = () => {
           <CustomText style={styles.do_text}>Don’t have an account?</CustomText>
           <CustomText
             isBold
-            style={styles.Sign_text}
+            style={[styles.Sign_text, {color: theme.text}]}
             onPress={() => navigationServices.navigate('SignupScreen')}>
             Sign Up
           </CustomText>
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   },
   input_container: {
     borderTopWidth: 6,
-    borderTopColor: Colors.themeColor,
+    borderTopColor: '#44BFD2',
     borderRadius: 20,
     width: SIZES.windowWidth * 0.95,
     alignItems: 'center',
@@ -227,7 +227,6 @@ const styles = StyleSheet.create({
     ...FONTS.Medium14,
   },
   Sign_text: {
-    color: Colors.themeColor,
     ...FONTS.Bold18,
     marginLeft: SIZES.radius_sm,
   },

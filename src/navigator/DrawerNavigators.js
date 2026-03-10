@@ -18,13 +18,10 @@ import RiderEditProfile from '../screen/riderEditProfile';
 
 const DrawerNavigators = () => {
   const DrawerNavigation = createDrawerNavigator();
-  const riderMode = useSelector(state => state?.commonReducer?.riderMode);
-
-  const firstScreen = riderMode ? 'DashBoardScreen' : 'HomeScreen';
   return (
     <DrawerNavigation.Navigator
       drawerContent={props => <CustomDrawer {...props} />}
-      initialRouteName={firstScreen}
+      initialRouteName={'HomeScreen'}
       screenOptions={{
         headerShown: false,
         drawerStyle: {
@@ -43,8 +40,14 @@ const DrawerNavigators = () => {
       <DrawerNavigation.Screen name="ChangeScreen" component={ChangeScreen} />
       <DrawerNavigation.Screen name="SaveAddress" component={SaveAddress} />
       <DrawerNavigation.Screen name="Setting" component={Setting} />
-      <DrawerNavigation.Screen name="RiderEditProfile" component={RiderEditProfile} />
-      <DrawerNavigation.Screen name="UserEditProfile" component={UserEditProfile} />
+      <DrawerNavigation.Screen
+        name="RiderEditProfile"
+        component={RiderEditProfile}
+      />
+      <DrawerNavigation.Screen
+        name="UserEditProfile"
+        component={UserEditProfile}
+      />
       <DrawerNavigation.Screen
         name="MyBookingScreen"
         component={MyBookingScreen}

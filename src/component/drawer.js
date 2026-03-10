@@ -7,20 +7,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import Images from '../assests/Appimages';
-import Colors from '../config/appTheme';
 import {drawer_items, rider_drawer_item} from '../constant/arrays';
 import {FONTS, SIZES} from '../constant/sizes';
-import {windowHeight, windowWidth} from '../utility/utils';
+import {useTheme} from '../context/ThemeContext';
+import {setRiderMode} from '../store/slices/common';
+import {windowWidth} from '../utility/utils';
 import CustomImage from './customImage';
 import CustomText from './customText';
-import {moderateScale} from 'react-native-size-matters';
-import CustomButton from './customButton';
-import {setRiderMode} from '../store/slices/common';
-import {useTheme} from '../context/ThemeContext';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import LinearGradient from 'react-native-linear-gradient';
 
 const CustomDrawer = React.memo(() => {
   const {theme} = useTheme();
@@ -34,10 +31,6 @@ const CustomDrawer = React.memo(() => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigation = useNavigation();
   const riderMode = useSelector(state => state?.commonReducer?.riderMode);
-
-  const drawer_array = riderMode === true ? rider_drawer_item : drawer_items;
-
-  console.log('Drawer items:', drawer_array);
 
   return (
     <ImageBackground
@@ -75,7 +68,7 @@ const CustomDrawer = React.memo(() => {
             style={{
               marginTop: SIZES.padding,
             }}>
-            {drawer_array.map((item, index) => (
+            {drawer_items.map((item, index) => (
               <TouchableOpacity
                 key={item.id || index}
                 onPress={item.onPress}

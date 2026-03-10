@@ -7,15 +7,15 @@ import TextInputWithTitle from '../component/textInputWithTitle';
 import Colors from '../config/appTheme';
 import {FONTS, SIZES} from '../constant/sizes';
 import {windowWidth} from '../utility/utils';
+import {useTheme} from '../context/ThemeContext';
 
 const SignupScreen = () => {
+  const {theme} = useTheme();
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={true}>
-      <ImageBackground
-        source={Images.background_splash_screen}
-        style={styles.gradient}>
+      <ImageBackground source={Images.background_image} style={styles.gradient}>
         <View
           style={{
             height: SIZES.windowHeight * 0.14,
@@ -33,7 +33,7 @@ const SignupScreen = () => {
         <CustomText isBold style={styles.heading}>
           Cab Booking App
         </CustomText>
-        <View style={styles.input_container}>
+        <View style={[styles.input_container, {borderTopColor: theme.primary}]}>
           <CustomText
             isBold
             style={{
@@ -52,10 +52,10 @@ const SignupScreen = () => {
             inputWidth={0.8}
             fontSize={SIZES.h12}
             borderRadius={10}
-            borderColor={Colors.mediumGray}
             backgroundColor={'rgba(230, 232, 230,0.6)'}
             marginTop={SIZES.base}
             placeholderColor={Colors.mediumGray}
+            borderColor={theme.primary}
             inputStyle={{
               borderBottomWidth: 3,
               borderBottomColor: Colors.darkGray,
@@ -68,7 +68,7 @@ const SignupScreen = () => {
             viewWidth={0.85}
             inputWidth={0.8}
             fontSize={SIZES.h12}
-            borderColor={Colors.mediumGray}
+            borderColor={theme.primary}
             borderRadius={10}
             backgroundColor={'rgba(230, 232, 230,0.6)'}
             marginTop={SIZES.h10}
@@ -83,7 +83,7 @@ const SignupScreen = () => {
             title={'Password :'}
             placeholder={'Enter Your Password :'}
             viewHeight={0.075}
-            borderColor={Colors.mediumGray}
+            borderColor={theme.primary}
             viewWidth={0.85}
             inputWidth={0.8}
             fontSize={SIZES.h14}
@@ -108,7 +108,7 @@ const SignupScreen = () => {
             backgroundColor={'rgba(230, 232, 230,0.6)'}
             marginTop={SIZES.h10}
             placeholderColor={Colors.mediumGray}
-            borderColor={Colors.mediumGray}
+            borderColor={theme.primary}
             inputStyle={{
               borderBottomWidth: 4,
               borderBottomColor: Colors.black,
@@ -120,7 +120,7 @@ const SignupScreen = () => {
             width={SIZES.windowWidth * 0.8}
             height={SIZES.windowHeight * 0.07}
             marginTop={SIZES.padding}
-            bgColor={Colors.button_gredient}
+            bgColor={theme.buttonGredient}
             borderRadius={SIZES.h16}
             isBold
             isGradient
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     color: Colors.veryLightGray,
     marginTop: SIZES.padding2,
     width: SIZES.windowWidth * 0.85,
-    ...FONTS.Regular16,
+    ...FONTS.Regular14,
     textAlign: 'center',
   },
   heading: {
