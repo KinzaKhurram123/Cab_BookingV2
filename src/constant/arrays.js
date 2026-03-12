@@ -150,6 +150,13 @@ export const drawer_items = [
     },
   },
   {
+    id: 8,
+    name: 'Edit Profile',
+    onPress: () => {
+      navigationServices.navigate('EditProfile');
+    },
+  },
+  {
     id: 3,
     name: 'Saved Locations',
     onPress: () => {

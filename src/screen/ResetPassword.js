@@ -7,16 +7,23 @@ import Colors from '../config/appTheme';
 import {FONTS, SIZES} from '../constant/sizes';
 import navigationServices from '../navigator/navigationServices';
 import {useTheme} from '../context/ThemeContext';
+import {useState} from 'react';
+import {View} from 'react-native';
+import {onPressResetPassword} from '../apisConfig/auth';
 
-const ResetPassword = () => {
+const ResetPassword = props => {
+  const email = props?.route?.params?.email;
   const {theme} = useTheme();
+  const [password, setPassword] = useState('');
+  const [confirm_password, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={true}>
       <Header headerColor={Colors.white} showBack hideUser={true} />
-      <ImageBackground style={styles.gradient}>
+      <View style={styles.gradient}>
         <CustomText
           isBold
           style={{
@@ -33,6 +40,8 @@ const ResetPassword = () => {
           choose a password you haven’t used before.
         </CustomText>
         <TextInputWithTitle
+          value={password}
+          setText={setPassword}
           title={'New Password:'}
           placeholder={'Enter New Password Here'}
           viewHeight={0.075}
@@ -50,6 +59,8 @@ const ResetPassword = () => {
           }}
         />
         <TextInputWithTitle
+          value={confirm_password}
+          setText={setConfirmPassword}
           title={'Confirm New Password :'}
           placeholder={'Enter Confirm New Password Here'}
           viewHeight={0.075}
@@ -80,9 +91,19 @@ const ResetPassword = () => {
           btn_style={{
             ...FONTS.Regular14,
           }}
-          onPress={() => navigationServices.navigate('LoginScreen')}
+          loader={loading}
+          onPress={() => {
+            onPressResetPassword({
+              setLoading,
+              body: {
+                password: password,
+                confirmpassword: confirm_password,
+                email: email,
+              },
+            });
+          }}
         />
-      </ImageBackground>
+      </View>
     </ScrollView>
   );
 };

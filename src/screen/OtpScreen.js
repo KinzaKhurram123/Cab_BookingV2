@@ -13,13 +13,15 @@ import {
 import {useEffect, useState} from 'react';
 import navigationServices from '../navigator/navigationServices';
 import {useTheme} from '../context/ThemeContext';
+import {onPressCodeCheck} from '../apisConfig/auth';
+import {moderateScale} from 'react-native-size-matters';
 
 const OtpScreen = props => {
+  const data = props?.route?.params?.data;
   const {theme} = useTheme();
-  const email = props?.route?.params?.email;
-  const [code, setCode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const CELL_COUNT = 4;
+  const [code, setCode] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const CELL_COUNT = 6;
   const ref = useBlurOnFulfill({code, cellCount: CELL_COUNT});
   const [abcd, getCellOnLayoutHandler] = useClearByFocusCell({
     code,
@@ -39,12 +41,13 @@ const OtpScreen = props => {
   useEffect(() => {
     label();
   }, [time]);
+
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={true}>
       <Header headerColor={Colors.white} showBack hideUser={true} />
-      <ImageBackground style={styles.gradient}>
+      <View style={styles.gradient}>
         <CustomText
           isBold
           style={{
@@ -59,6 +62,11 @@ const OtpScreen = props => {
         <CustomText style={styles.text}>
           We’ve sent a one-time password to your registered contact details.
           Please enter it below to continue.
+        </CustomText>
+        <CustomText
+          isBold
+          style={{...FONTS.Regular13, marginTop: moderateScale(10, 0.6)}}>
+          {data?.otp}
         </CustomText>
         <CodeField
           placeholder={'0'}
@@ -101,9 +109,18 @@ const OtpScreen = props => {
           isBold
           isGradient
           elevation
-          onPress={() => navigationServices.navigate('ResetPassword')}
+          loader={loading}
+          onPress={() => {
+            onPressCodeCheck({
+              setLoading,
+              body: {
+                code: code.toString(),
+                email: data?.body?.email.toLowerCase().trim(),
+              },
+            });
+          }}
         />
-      </ImageBackground>
+      </View>
     </ScrollView>
   );
 };
@@ -135,18 +152,17 @@ const styles = StyleSheet.create({
   codeFieldRoot: {
     marginTop: SIZES.h20,
     marginBottom: SIZES.h14,
-    width: SIZES.windowWidth * 0.9,
+    width: SIZES.windowWidth * 0.95,
     marginLeft: 'auto',
     marginRight: 'auto',
   },
   cellRoot: {
-    width: SIZES.windowWidth * 0.18,
-    height: SIZES.windowWidth * 0.18,
+    width: SIZES.windowWidth * 0.14,
+    height: SIZES.windowWidth * 0.14,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(10, 35, 66, 0.1)',
     borderRadius: SIZES.base,
-    marginHorizontal: SIZES.base,
   },
   focusCell: {
     borderWidth: 2,

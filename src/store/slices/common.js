@@ -30,12 +30,9 @@ const CommonSlice = createSlice({
     },
     setUserData(state, action) {
       state.userData = action?.payload;
-      console.log('🚀 ~ setUserData ~ action?.payload:', action?.payload);
-      // state.userData = action?.payload?.userData;
     },
     setUserLogOut(state, action) {
       state.userData = {};
-      // console.log("🚀 ~ setUserLogOut ~ userData:", userData)
     },
     setEventDataRider(state, action) {
       state.riderEventData = action.payload;

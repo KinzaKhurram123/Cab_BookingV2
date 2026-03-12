@@ -8,9 +8,20 @@ import Colors from '../config/appTheme';
 import {FONTS, SIZES} from '../constant/sizes';
 import {windowWidth} from '../utility/utils';
 import {useTheme} from '../context/ThemeContext';
+import {useDispatch} from 'react-redux';
+import {useState} from 'react';
+import {onPressSignup} from '../apisConfig/auth';
 
 const SignupScreen = () => {
   const {theme} = useTheme();
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [phone_number, setphoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm_password, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
@@ -47,6 +58,8 @@ const SignupScreen = () => {
           <TextInputWithTitle
             title={'Full Name:'}
             placeholder={'Enter Your Full Name'}
+            value={name}
+            setText={setName}
             viewHeight={0.075}
             viewWidth={0.85}
             inputWidth={0.8}
@@ -62,6 +75,8 @@ const SignupScreen = () => {
             }}
           />
           <TextInputWithTitle
+            value={email}
+            setText={setEmail}
             title={'Email Address :'}
             placeholder={'Enter Your Email Address'}
             viewHeight={0.075}
@@ -78,7 +93,29 @@ const SignupScreen = () => {
               borderBottomColor: Colors.darkGray,
             }}
           />
+
           <TextInputWithTitle
+            value={phone_number}
+            setText={setphoneNumber}
+            title={'Phone Number :'}
+            placeholder={'Enter Your Phone Number'}
+            viewHeight={0.075}
+            viewWidth={0.85}
+            inputWidth={0.8}
+            fontSize={SIZES.h12}
+            borderColor={theme.primary}
+            borderRadius={10}
+            backgroundColor={'rgba(230, 232, 230,0.6)'}
+            marginTop={SIZES.h10}
+            placeholderColor={Colors.mediumGray}
+            inputStyle={{
+              borderBottomWidth: 3,
+              borderBottomColor: Colors.darkGray,
+            }}
+          />
+          <TextInputWithTitle
+            value={password}
+            setText={setPassword}
             titleText={'Username'}
             title={'Password :'}
             placeholder={'Enter Your Password :'}
@@ -97,6 +134,8 @@ const SignupScreen = () => {
             }}
           />
           <TextInputWithTitle
+            value={confirm_password}
+            setText={setConfirmPassword}
             titleText={'Username'}
             title={'Confirm Password :'}
             placeholder={'Enter Your Password :'}
@@ -125,6 +164,20 @@ const SignupScreen = () => {
             isBold
             isGradient
             elevation
+            loader={loading}
+            onPress={() => {
+              onPressSignup({
+                setLoading,
+                body: {
+                  email,
+                  password,
+                  name,
+                  phoneNumber: phone_number,
+                  role: 'customer',
+                },
+                dispatch,
+              });
+            }}
           />
         </View>
         <View
@@ -226,7 +279,7 @@ const styles = StyleSheet.create({
     ...FONTS.Medium14,
   },
   Sign_text: {
-    color: Colors.themeColor,
+    color: Colors.black,
     ...FONTS.Bold18,
     marginLeft: SIZES.radius_sm,
   },

@@ -1,10 +1,9 @@
 import {useIsFocused} from '@react-navigation/native';
 import {getDistance, isValidCoordinate} from 'geolib';
 import React, {useEffect, useRef, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import {Divider, Icon} from 'native-base';
 import {moderateScale} from 'react-native-size-matters';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -14,143 +13,23 @@ import CustomImage from '../component/customImage';
 import CustomText from '../component/customText';
 import PulsingMarker from '../component/pulsingMarker';
 import {GoogleApiKey} from '../config';
-import Colors from '../config/appTheme';
 import {mapstyle} from '../constant/mapStyle';
 import {FONTS, SIZES} from '../constant/sizes';
-import {windowHeight, windowWidth} from '../utility/utils';
 import {useTheme} from '../context/ThemeContext';
 import navigationServices from '../navigator/navigationServices';
+import {windowWidth} from '../utility/utils';
+import {color} from 'native-base/lib/typescript/theme/styled-system';
 
-const RideBooking = () => {
+const ConfirmBooking = props => {
   const {theme} = useTheme();
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [pickupLocation, setPickUpLocation] = useState({});
-  const [dropOffLocation, setDropOffLocation] = useState({});
-  const [locationType, setLocationType] = useState('pickup');
-  const [isYourLocation, setIsyourLocation] = useState(null);
-  const [address, setAddress] = useState('');
+  const data = props?.route?.params?.data;
+  console.log(data, '===============>dataaaaaaaaaa');
   const isFocused = useIsFocused();
   const mapRef = useRef(null);
-  const [isNearDestination, setIsNearDestination] = useState(false);
-  const data = {};
 
-  const [currentPosition, setCurrentPosition] = useState({
-    latitude: 25.0045215,
-    longitude: 67.0765187,
-  });
-
-  const origin = {
-    lat: currentPosition?.latitude,
-    lng: currentPosition?.longitude,
-  };
-
-  const destination = {
-    lat: 24.8016, // Default destination
-    lng: 67.0295,
-  };
-
-  useEffect(() => {
-    getCurrentLocation();
-  }, [isFocused]);
-
-  useEffect(() => {
-    const watchId = Geolocation.watchPosition(
-      position => {
-        const {latitude, longitude} = position.coords;
-        setCurrentPosition(prevLocation => ({
-          ...prevLocation,
-          latitude,
-          longitude,
-        }));
-
-        const distance = getDistance(currentPosition, destination);
-        setIsNearDestination(distance <= 20);
-      },
-      error => console.log('Error getting location:', error),
-      {
-        enableHighAccuracy: true,
-        distanceFilter: 1,
-        interval: 1000,
-      },
-    );
-    return () => {
-      Geolocation.clearWatch(watchId);
-    };
-  }, [isFocused]);
-
-  const getCurrentLocation = async () => {
-    try {
-      const position = await new Promise((resolve, reject) => {
-        Geolocation.getCurrentPosition(
-          position => {
-            const coords = {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            };
-            console.log(
-              position.coords.latitude,
-              position.coords.longitude,
-              'currrent location',
-            );
-            resolve(coords);
-            getAddressFromCoordinates(
-              position.coords.latitude,
-              position.coords.longitude,
-            );
-          },
-          error => {
-            reject(new Error(error.message));
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 10000,
-          },
-        );
-      });
-      setCurrentPosition(position);
-    } catch (error) {
-      console.error('Error getting location:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (isValidCoordinate(currentPosition) && mapRef.current) {
-      mapRef.current.animateToRegion(
-        {
-          latitude: currentPosition.latitude,
-          longitude: currentPosition.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        },
-        1000,
-      );
-    }
-  }, [currentPosition]);
-
-  const getAddressFromCoordinates = async (latitude, longitude) => {
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GoogleApiKey}`;
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      if (data.status === 'OK') {
-        const givenaddress = data.results[0].formatted_address;
-        setAddress(givenaddress);
-      } else {
-        console.log('No address found');
-      }
-    } catch (error) {
-      console.error('Error getting address:', error);
-    }
-  };
-
-  const pramsData = {
-    pickupLocation: currentPosition,
-    dropOffLocation: {
-      latitude: 24.8016,
-      longitude: 67.0295,
-    },
+  const currentPosition = {
+    latitude: data?.pickupLocation?.lat,
+    longitude: data?.pickupLocation?.lng,
   };
 
   return (
@@ -203,6 +82,9 @@ const RideBooking = () => {
             <CustomText isBold style={[styles.heading, {color: theme.text}]}>
               Your Ride Is Confirmed
             </CustomText>
+            <CustomText style={{...FONTS.Regular12, color: theme.black}}>
+              Please wait for the rider to accept your ride
+            </CustomText>
           </View>
           <View style={styles.row_view}>
             <CustomButton
@@ -243,7 +125,7 @@ const RideBooking = () => {
   );
 };
 
-export default RideBooking;
+export default ConfirmBooking;
 
 const styles = StyleSheet.create({
   scrollContainer: {

@@ -1,5 +1,5 @@
 import {Icon} from 'native-base';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -18,9 +18,77 @@ import {FONTS, SIZES} from '../constant/sizes';
 import {windowWidth} from '../utility/utils';
 import Header from '../component/Header';
 import {useTheme} from '../context/ThemeContext';
+import {useSelector} from 'react-redux';
+import {moderateScale} from 'react-native-size-matters';
+import Geolocation from 'react-native-geolocation-service';
+import {useIsFocused} from '@react-navigation/native';
+import {GoogleApiKey} from '../config';
 
 const HomeScreen = () => {
+  const isFocused = useIsFocused();
   const {theme} = useTheme();
+  const userData = useSelector(state => state.commonReducer.userData);
+  const [currentPosition, setCurrentPosition] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [address, setAddress] = useState('');
+
+  const getCurrentLocation = async () => {
+    try {
+      const position = await new Promise((resolve, reject) => {
+        Geolocation.getCurrentPosition(
+          position => {
+            const coords = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            };
+            resolve(coords);
+            getAddressFromCoordinates(
+              position.coords.latitude,
+              position.coords.longitude,
+            );
+          },
+          error => {
+            reject(new Error(error.message));
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 10000,
+          },
+        );
+      });
+      setCurrentPosition(position);
+    } catch (error) {
+      console.error('Error getting location:', error);
+      throw error;
+    }
+  };
+
+  const getAddressFromCoordinates = async (latitude, longitude) => {
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GoogleApiKey}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.status === 'OK') {
+        const givenaddress = data.results[0].formatted_address;
+        setAddress(givenaddress);
+      } else {
+        console.log('No address found');
+      }
+    } catch (error) {
+      console.error('--------------------------------- error', error);
+    }
+  };
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, [isFocused]);
+
+  const parts = address.split(',');
+  const firstPart = parts[0];
+  const restPart = parts.slice(1).join(',').trim();
 
   return (
     <ScrollView
@@ -55,12 +123,15 @@ const HomeScreen = () => {
               </CustomText>
               <CustomText
                 isBold
-                style={[styles.name_heading, {color: theme.text}]}>
-                Path Jhonson
+                style={[
+                  styles.name_heading,
+                  {color: theme.text, marginLeft: moderateScale(3, 0.6)},
+                ]}>
+                {userData?.name}
               </CustomText>
             </View>
             <CustomText style={[styles.text, {color: theme.mediumGray}]}>
-              Jhonson@gmail.com
+              {userData?.email}
             </CustomText>
           </View>
 
@@ -80,7 +151,7 @@ const HomeScreen = () => {
           style={[
             styles.search_view,
             {
-              backgroundColor: theme.lightGrey || '#F3F4F6',
+              backgroundColor: theme.white || '#F3F4F6',
             },
           ]}>
           <Icon
@@ -91,13 +162,18 @@ const HomeScreen = () => {
           />
           <View style={{marginLeft: SIZES.padding2}}>
             <CustomText
+              numberOfLines={1}
               style={[styles.location_heading, {color: theme.mediumGray}]}
               isBold>
-              Yellowstone National Park
+              {firstPart}
             </CustomText>
             <CustomText
-              style={[styles.location_text, {color: theme.veryLightGray}]}>
-              Wyoming, Montana, Idaho
+              numberOfLines={2}
+              style={[
+                styles.location_text,
+                {color: theme.veryLightGray, width: windowWidth * 0.7},
+              ]}>
+              {restPart}
             </CustomText>
           </View>
         </View>

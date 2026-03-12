@@ -1,28 +1,26 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import Header from '../component/Header';
-import Colors from '../config/appTheme';
-import {FONTS, SIZES} from '../constant/sizes';
-import {windowHeight, windowWidth} from '../utility/utils';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {Divider, Icon} from 'native-base';
-import {moderateScale} from 'react-native-size-matters';
-import CustomImage from '../component/customImage';
-import Images from '../assests/Appimages';
-import CustomText from '../component/customText';
-import Entypo from 'react-native-vector-icons/Entypo';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import CustomButton from '../component/customButton';
-import navigationServices from '../navigator/navigationServices';
-import SearchLocationModal from '../component/searchLocationModal';
-import {GoogleApiKey} from '../config';
-import Geolocation from 'react-native-geolocation-service';
 import {useIsFocused} from '@react-navigation/native';
 import {getDistance, isValidCoordinate} from 'geolib';
+import {Divider, Icon} from 'native-base';
+import React, {useEffect, useRef, useState} from 'react';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+import MapView from 'react-native-maps';
+import {moderateScale} from 'react-native-size-matters';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Images from '../assests/Appimages';
+import CustomButton from '../component/customButton';
+import CustomImage from '../component/customImage';
+import CustomText from '../component/customText';
 import PulsingMarker from '../component/pulsingMarker';
-import {mapstyle} from '../constant/mapStyle';
+import SearchLocationModal from '../component/searchLocationModal';
+import {GoogleApiKey} from '../config';
+import Colors from '../config/appTheme';
+import {FONTS, SIZES} from '../constant/sizes';
 import {useTheme} from '../context/ThemeContext';
+import navigationServices from '../navigator/navigationServices';
+import {windowHeight, windowWidth} from '../utility/utils';
 
 const RideBooking = () => {
   const {theme} = useTheme();
@@ -30,17 +28,19 @@ const RideBooking = () => {
   const [pickupLocation, setPickUpLocation] = useState({});
   const [dropOffLocation, setDropOffLocation] = useState({});
   const [locationType, setLocationType] = useState('pickup');
-  const [isYourLocation, setIsyourLocation] = useState(null);
+  const [isYourLocation, setIsyourLocation] = useState(false);
   const isFocused = useIsFocused();
   const mapRef = useRef(null);
   const [isNearDestination, setIsNearDestination] = useState(false);
   const [address, setAddress] = useState('');
+  const [distance, setDistance] = useState(0);
+  const [time, setTime] = useState(0);
+  const [fare, setFare] = useState(0);
   const data = {};
   const [currentPosition, setCurrentPosition] = useState({
     latitude: 0,
     longitude: 0,
   });
-
   const origin = {
     lat: currentPosition?.latitude,
     lng: currentPosition?.longitude,
@@ -79,6 +79,59 @@ const RideBooking = () => {
       Geolocation.clearWatch(watchId);
     };
   }, [isFocused]);
+
+  useEffect(() => {
+    const pickup_location_lat = isYourLocation
+      ? currentPosition?.latitude
+      : pickupLocation?.lat;
+
+    const pickup_location_lng = isYourLocation
+      ? currentPosition?.longitude
+      : pickupLocation?.lng;
+
+    if (
+      pickup_location_lat &&
+      pickup_location_lng &&
+      dropOffLocation?.lat &&
+      dropOffLocation?.lng
+    ) {
+      const getRouteInfo = async () => {
+        try {
+          const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${pickup_location_lat},${pickup_location_lng}&destinations=${dropOffLocation.lat},${dropOffLocation.lng}&key=${GoogleApiKey}`;
+          const response = await fetch(url);
+          const data = await response.json();
+          if (data.status === 'OK') {
+            const element = data.rows[0].elements[0];
+            if (element.status === 'OK') {
+              const distanceInMeters = element.distance.value;
+              const durationInSeconds = element.duration.value;
+              const distanceInKm = distanceInMeters / 1000;
+              const durationInMinutes = durationInSeconds / 60;
+              setDistance(distanceInKm.toFixed(2));
+              setTime(durationInMinutes.toFixed(2));
+              const baseFare = 2;
+              const pricePerKm = 1.5;
+              const pricePerMinute = 0.25;
+              const calculatedFare =
+                baseFare +
+                distanceInKm * pricePerKm +
+                durationInMinutes * pricePerMinute;
+              setFare(Math.round(calculatedFare));
+            }
+          } else {
+            console.log('Error from Distance Matrix API:', data.status);
+          }
+        } catch (error) {
+          console.error('Error fetching route info:', error);
+        }
+      };
+      getRouteInfo();
+    } else {
+      setFare(0);
+      setDistance(0);
+      setTime(0);
+    }
+  }, [pickupLocation, dropOffLocation, isYourLocation, currentPosition]);
 
   const getCurrentLocation = async () => {
     try {
@@ -150,8 +203,25 @@ const RideBooking = () => {
   const pramsData = {
     pickupLocation: isYourLocation ? currentPosition : pickupLocation,
     dropOffLocation: dropOffLocation,
+    price: fare,
+    time: time,
+    distance: distance,
+    pickupLocationName: isYourLocation ? address : pickupLocation?.name,
   };
-  console.log('Google API Key:', GoogleApiKey);
+
+  const onPressSubmit = () => {
+    if (
+      !pickupLocation ||
+      !dropOffLocation ||
+      !isValidCoordinate(pickupLocation) ||
+      !isValidCoordinate(dropOffLocation)
+    ) {
+      Alert.alert('Please select valid pickup and drop-off locations First');
+      return;
+    } else {
+      navigationServices.navigate('RideDetails', {pramsData});
+    }
+  };
 
   return (
     <View style={styles.scrollContainer}>
@@ -306,7 +376,7 @@ const RideBooking = () => {
                   <CustomText
                     isBold
                     style={[styles.price, {color: theme.primary}]}>
-                    6 $
+                    {fare > 0 ? `${fare} $` : '6 $'}
                   </CustomText>
                 </View>
               </View>
@@ -411,9 +481,7 @@ const RideBooking = () => {
             isBold
             isGradient
             elevation
-            onPress={() =>
-              navigationServices.navigate('RideDetails', {pramsData})
-            }
+            onPress={() => onPressSubmit()}
           />
         </View>
       </View>

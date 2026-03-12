@@ -21,6 +21,8 @@ const pet_delivery = require('../assests/images/pet_delivery.png');
 const carimage = require('../assests/images/carimage.png');
 const confirm_ride = require('../assests/images/confirm_ride.png');
 const big_car = require('../assests/images/big_car.png');
+const no_user_image = require('../assests/images/user.png');
+
 const Images = {
   background_image,
   car_image,
@@ -45,6 +47,7 @@ const Images = {
   carimage,
   confirm_ride,
   big_car,
+  no_user_image,
 };
 
 export default Images;

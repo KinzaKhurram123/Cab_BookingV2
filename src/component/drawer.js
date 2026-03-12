@@ -14,19 +14,14 @@ import Images from '../assests/Appimages';
 import {drawer_items, rider_drawer_item} from '../constant/arrays';
 import {FONTS, SIZES} from '../constant/sizes';
 import {useTheme} from '../context/ThemeContext';
-import {setRiderMode} from '../store/slices/common';
+import {setRiderMode, setUserLogOut} from '../store/slices/common';
 import {windowWidth} from '../utility/utils';
 import CustomImage from './customImage';
 import CustomText from './customText';
+import {setUserLogoutAuth, setUserToken} from '../store/slices/auth-slice';
 
 const CustomDrawer = React.memo(() => {
   const {theme} = useTheme();
-
-  console.log('Theme in Drawer:', theme);
-  console.log('Theme text color:', theme?.text);
-  console.log('Theme primary:', theme?.primary);
-  console.log('Theme primary:', theme?.gradient);
-
   const dispatch = useDispatch();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigation = useNavigation();
@@ -94,8 +89,8 @@ const CustomDrawer = React.memo(() => {
           <View style={[styles.end_view, {borderTopColor: '#E0E0E0'}]}>
             <TouchableOpacity
               onPress={() => {
-                dispatch(setRiderMode(false));
-                navigation.navigate('SelectUserTypeScreen');
+                dispatch(setUserLogoutAuth());
+                dispatch(setUserLogOut());
               }}
               style={styles.logoutButton}>
               <View style={styles.drawerItemContent}>

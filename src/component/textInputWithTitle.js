@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {FONTS, SIZES} from '../constant/sizes';
 import {useState} from 'react';
-import {FontAwesome} from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import CustomText from './customText';
 import Colors from '../config/appTheme';
 import {Icon} from 'native-base';
@@ -21,7 +21,6 @@ import {useTheme} from '../context/ThemeContext';
 const TextInputWithTitle = props => {
   const {theme} = useTheme();
   const [showPassword, setShowPassword] = useState(false);
-
   return (
     <>
       {props?.title && (

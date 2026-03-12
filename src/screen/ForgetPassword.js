@@ -7,15 +7,20 @@ import Colors from '../config/appTheme';
 import {FONTS, SIZES} from '../constant/sizes';
 import navigationServices from '../navigator/navigationServices';
 import {useTheme} from '../context/ThemeContext';
+import {useState} from 'react';
+import {View} from 'native-base';
+import {onPressForgetPassword} from '../apisConfig/auth';
 
 const ForgetPassword = () => {
   const {theme} = useTheme();
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       showsVerticalScrollIndicator={true}>
       <Header headerColor={Colors.white} showBack hideUser={true} />
-      <ImageBackground style={styles.gradient}>
+      <View style={styles.gradient}>
         <CustomText
           isBold
           style={{
@@ -32,6 +37,8 @@ const ForgetPassword = () => {
           and we’ll send you instructions to reset it.
         </CustomText>
         <TextInputWithTitle
+          value={email}
+          setText={setEmail}
           title={'Email Address :'}
           placeholder={'Enter Your Email Address'}
           viewHeight={0.075}
@@ -59,9 +66,12 @@ const ForgetPassword = () => {
           isBold
           isGradient
           elevation
-          onPress={() => navigationServices.navigate('OtpScreen')}
+          loader={loading}
+          onPress={() => {
+            onPressForgetPassword({setLoading, body: {email: email}});
+          }}
         />
-      </ImageBackground>
+      </View>
     </ScrollView>
   );
 };

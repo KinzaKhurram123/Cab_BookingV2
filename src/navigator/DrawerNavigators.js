@@ -15,6 +15,7 @@ import {useSelector} from 'react-redux';
 import MyBookingScreen from '../screen/MyBookingScreen';
 import UserEditProfile from '../screen/userEditProfileScreen';
 import RiderEditProfile from '../screen/riderEditProfile';
+import EditProfile from '../screen/EditProfile';
 
 const DrawerNavigators = () => {
   const DrawerNavigation = createDrawerNavigator();
@@ -40,6 +41,7 @@ const DrawerNavigators = () => {
       <DrawerNavigation.Screen name="ChangeScreen" component={ChangeScreen} />
       <DrawerNavigation.Screen name="SaveAddress" component={SaveAddress} />
       <DrawerNavigation.Screen name="Setting" component={Setting} />
+      <DrawerNavigation.Screen name="EditProfile" component={EditProfile} />
       <DrawerNavigation.Screen
         name="RiderEditProfile"
         component={RiderEditProfile}
